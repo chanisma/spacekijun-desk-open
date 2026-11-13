@@ -1,0 +1,49 @@
+# 자격증명 — 절대 커밋 금지
+.secrets/
+*.credentials.json
+.env
+.env.*
+
+# 의존성
+node_modules/
+
+# 학생 개인정보가 든 산출물 (실명·생기부 내용·시간표)
+output/
+
+# 도구 부산물
+.playwright-mcp/
+.omc/
+*.png
+NEIS_raw_html.html
+
+# 브라우저 고정 프로필 (인증서 권한 승인 보관)
+.browser-profile/
+
+# 파이썬 부산물
+__pycache__/
+*.pyc
+
+# Windows executable build output
+build/
+dist/*.old.exe
+# 실행 파일(.exe)은 git 에 두지 않는다 — 업데이트 서버(Supabase desk-releases)에만 (2026-11-06 사용자 결정, 저장소 2.5GB 로 push 거부)
+# 빌드한 PC 에서 deploy/*/publish.py 로 올린다. 다른 PC 는 pull 뒤 다시 빌드한다
+dist/*.exe
+dist/test/
+dist/intune/stage/
+# 교실판 아이콘(구글 공식·Windows 실행 파일에서 뽑은 것) — 빌드에 들어간다. 위 *.png 는 화면 캡처(개인정보) 막기
+!app/web/icons/**/*.png
+!android/app/src/main/res/mipmap-*/*.png
+!app/web/icons/*.png
+
+# 이세계 3D 게임 파일 — deploy/isekai3d/sync.py 가 isekai3d 저장소에서 빌드해 넣는다 (실행 파일에 묶임)
+app/games/
+
+# 이세계 사회인 캐릭터 팩 (.intunewin 약 200MB — GitHub 100MB 제한 밖, 개발 PC 에만)
+dist/intune-isekai3d/
+
+# 별사이 목장 원화 (codex, 장마다 1MB — 스프라이트만 싣는다)
+.tmp_ranch/
+!app/web/ranch/sprites/*.png
+!app/web/ranch/originals/*-source.png
+!app/web/ranch/environment/*-source.png

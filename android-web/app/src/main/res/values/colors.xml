@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 사이트 manifest.json 의 theme_color · background_color -->
+    <color name="theme">#7CC6A0</color>
+    <color name="background">#FFFFFF</color>
+    <color name="icon_background">#FFFFFF</color>
+</resources>

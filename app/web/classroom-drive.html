@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>드라이브 — 스페이스기전 교실</title>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="classroom-drive.css">
+</head>
+<body>
+<div class="app">
+  <aside class="side" aria-label="위치">
+    <p class="side-head" id="who"></p>
+    <nav id="places"></nav>
+    <p class="side-cap">이 PC</p>
+    <nav id="pcnav"></nav>
+    <p class="side-cap" id="presets-cap" hidden>이 수업 폴더</p>
+    <nav id="presets"></nav>
+    <p class="side-cap" id="drives-cap" hidden>공유 드라이브</p>
+    <nav id="drives"></nav>
+  </aside>
+  <main class="main">
+    <header class="bar">
+      <button id="up" class="icon" type="button" aria-label="위 폴더로" title="위 폴더로">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+      </button>
+      <ol id="crumbs" class="crumbs" aria-label="경로"></ol>
+      <button id="refresh" class="icon" type="button" aria-label="새로 고침" title="새로 고침">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg>
+      </button>
+      <!-- 고르면 이 자리가 고른 것의 단추로 바뀐다 — 목록 위에 줄을 끼우면 두 번 누르기가 다른 줄에 떨어진다 -->
+      <span id="tools" class="tools">
+        <button id="mkdir" class="btn" type="button">새 폴더</button>
+        <button id="upload" class="btn primary" type="button">올리기</button>
+      </span>
+      <span id="pc-note" class="pc-note" hidden>이 PC 의 파일 — 수업이 끝나도 남고, 드라이브와는 따로입니다.</span>
+      <span id="selbar" class="tools" hidden>
+        <strong id="sel-count" title="Ctrl·Shift 로 여러 개 · Ctrl+A 모두 · Esc 해제"></strong>
+        <button id="sel-open" class="btn" type="button">열기</button>
+        <button id="sel-copy" class="btn primary" type="button">컴퓨터로 복사</button>
+        <button id="sel-reveal" class="btn" type="button" hidden title="Windows 탐색기에서 이 파일이 있는 자리를 엽니다">위치 열기</button>
+        <button id="sel-forget" class="btn" type="button" hidden title="이 목록에서만 뺍니다. 파일은 그 자리에 그대로 남습니다.">목록에서 빼기</button>
+        <button id="sel-trash" class="btn danger" type="button" hidden title="휴지통으로 옮깁니다">지우기</button>
+        <button id="sel-clear" class="btn" type="button" aria-label="선택 해제" title="선택 해제">✕</button>
+      </span>
+    </header>
+    <div id="banner" class="banner" hidden></div>
+    <div class="list" role="grid" aria-label="파일 목록">
+      <div class="row head" role="row">
+        <span role="columnheader"><input id="select-all" type="checkbox" class="pick" aria-label="모두 고르기"></span>
+        <span role="columnheader">이름</span><span role="columnheader" id="date-head">수정한 날</span><span role="columnheader">크기</span>
+      </div>
+      <div id="rows"></div>
+      <p id="empty" class="empty" hidden></p>
+    </div>
+    <footer class="files" id="files" hidden>
+      <strong>열어 둔 파일</strong>
+      <span class="muted">이 PC 의 수업 폴더에 받아 열었습니다. 저장하면 드라이브에 올라가고, 수업이 끝나면 이 PC 에서 지웁니다 — 남기려면 [이 PC 에 저장].</span>
+      <ul id="file-list"></ul>
+    </footer>
+  </main>
+</div>
+
+<!-- 드라이브 연결이 끝났을 때 — QR 로 다시 연결 -->
+<div id="reconnect" class="overlay" hidden>
+  <div class="card">
+    <h1 id="re-title">드라이브 연결이 끝났습니다</h1>
+    <p>구글 드라이브 연결은 1시간입니다. 수업 중인 선생님이 휴대폰으로 QR 을 찍으면 1시간 더 이어집니다.</p>
+    <div id="re-qr" class="qr" role="img" aria-label="드라이브 다시 연결 QR" hidden></div>
+    <p id="re-left" class="muted"></p>
+    <div class="row-buttons">
+      <button id="re-make" class="btn primary" type="button">QR 만들기</button>
+      <button id="re-cancel" class="btn" type="button" hidden>취소</button>
+    </div>
+    <button id="re-pc" class="link" type="button" hidden>이 PC 에 복사한 파일 보기</button>
+  </div>
+</div>
+
+<div id="folder-dialog" class="modal" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="folder-title">
+    <h2 id="folder-title">새 폴더</h2>
+    <input id="folder-name" maxlength="120" autocomplete="off" placeholder="폴더 이름">
+    <div class="row-buttons">
+      <button id="folder-cancel" class="btn" type="button">취소</button>
+      <button id="folder-ok" class="btn primary" type="button">만들기</button>
+    </div>
+  </div>
+</div>
+
+<script src="classroom-drive.js"></script>
+</body>
+</html>

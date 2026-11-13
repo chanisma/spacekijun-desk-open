@@ -1,0 +1,86 @@
+/* 캡처 보관함 — 폴더처럼 그림이 쌓이는 창. 데스크 화면(style.css)과 같은 글꼴·색을 쓴다. */
+:root{
+  font-family:'Pretendard Variable',Pretendard,'Malgun Gothic',system-ui,sans-serif;font-size:14px;
+  --bg:#f6f7fb;--panel:#ffffff;--line:#e6e9f1;--text:#1e293b;--muted:#64748b;--faint:#94a3b8;
+  --brand:#4f46e5;--brand-soft:#eef2ff;--pick:#4f46e5;--pick-soft:#e0e7ff;--danger:#b4232a;
+  --shadow:0 1px 2px rgba(15,23,42,.06),0 4px 14px rgba(15,23,42,.07);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#16171d;--panel:#1f2129;--line:#2d303b;--text:#e5e7eb;--muted:#9aa3b5;--faint:#6b7385;
+    --brand:#818cf8;--brand-soft:#262947;--pick:#818cf8;--pick-soft:#2b2f55;--danger:#f2777c;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 18px rgba(0,0,0,.35);color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16171d;--panel:#1f2129;--line:#2d303b;--text:#e5e7eb;--muted:#9aa3b5;--faint:#6b7385;
+  --brand:#818cf8;--brand-soft:#262947;--pick:#818cf8;--pick-soft:#2b2f55;--danger:#f2777c;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 18px rgba(0,0,0,.35);color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{display:flex;flex-direction:column;background:var(--bg);color:var(--text);user-select:none;-webkit-user-select:none}
+button{font:inherit;cursor:pointer}
+[hidden]{display:none!important}
+svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 22px;background:var(--panel);border-bottom:1px solid var(--line)}
+.title{display:flex;align-items:center;gap:12px;min-width:0}
+.mark{display:grid;place-items:center;width:38px;height:38px;border-radius:11px;color:#fff;flex-shrink:0;
+  background:linear-gradient(160deg,#a5b4fc,#4f46e5);box-shadow:inset 0 1px 0 rgba(255,255,255,.35)}
+h1{margin:0;font-size:16px;letter-spacing:-.4px}
+.title p{margin:3px 0 0;font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.actions{display:flex;gap:8px;flex-shrink:0}
+.primary,.ghost{border-radius:9px;padding:9px 15px;font-size:12.5px;font-weight:600;border:1px solid transparent;transition:background .15s,border-color .15s}
+.primary{background:var(--brand);color:#fff}
+.primary:hover{filter:brightness(1.08)}
+.ghost{background:var(--panel);border-color:var(--line);color:var(--muted)}
+.ghost:hover{border-color:var(--faint);color:var(--text)}
+:focus-visible{outline:3px solid #a5b4fc;outline-offset:2px}
+
+main{flex:1;overflow:auto;padding:6px 22px 22px;outline:none}
+.group h2{position:sticky;top:0;z-index:1;margin:0;padding:14px 2px 10px;background:var(--bg);font-size:12px;font-weight:700;color:var(--muted);letter-spacing:-.1px}
+.group h2 small{font-weight:500;color:var(--faint);margin-left:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:14px 12px}
+
+.tile{position:relative;display:flex;flex-direction:column;gap:7px;padding:8px;border-radius:12px;border:1px solid transparent;cursor:default;outline:none}
+.tile:hover{background:color-mix(in srgb,var(--panel) 70%,transparent)}
+.tile.picked{background:var(--pick-soft);border-color:color-mix(in srgb,var(--pick) 45%,transparent)}
+.tile:focus-visible{border-color:var(--pick)}
+.shot{display:grid;place-items:center;aspect-ratio:4/3;border-radius:8px;overflow:hidden;background:var(--panel);box-shadow:var(--shadow)}
+.shot img{max-width:100%;max-height:100%;object-fit:contain;-webkit-user-drag:none;pointer-events:none}
+.name{font-size:12px;font-weight:600;line-height:1.4;text-align:center;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow-wrap:anywhere}
+.meta{font-size:10.5px;color:var(--faint);text-align:center;margin-top:-4px;font-variant-numeric:tabular-nums}
+.tile.picked .name{color:var(--pick)}
+.rename{width:100%;font:inherit;font-size:12px;font-weight:600;text-align:center;padding:4px 6px;border-radius:6px;border:1px solid var(--pick);background:var(--panel);color:var(--text);outline:none;user-select:text}
+
+/* 막 담긴 캡처 — 보관함에 툭 떨어지듯 */
+.tile.fresh .shot{animation:land .55s cubic-bezier(.2,1.3,.35,1) both}
+@keyframes land{from{transform:translateY(-18px) scale(.82);opacity:0}to{transform:none;opacity:1}}
+.tile.dragging{opacity:.55}
+
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;height:100%;min-height:300px;color:var(--muted)}
+.empty strong{font-size:15px;color:var(--text);margin-top:22px}
+.empty p{font-size:12.5px;line-height:1.8;margin:8px 0 0}
+.empty-art{position:relative;width:96px;height:74px}
+.empty-art span{position:absolute;inset:0;border-radius:10px;background:var(--panel);box-shadow:var(--shadow);border:1px solid var(--line)}
+.empty-art span:nth-child(1){transform:rotate(-9deg) translate(-10px,4px)}
+.empty-art span:nth-child(2){transform:rotate(6deg) translate(10px,2px)}
+.empty-art span:nth-child(3){background:linear-gradient(160deg,var(--brand-soft),var(--panel))}
+
+.hint{padding:9px 22px;font-size:11px;color:var(--faint);border-top:1px solid var(--line);background:var(--panel)}
+
+#menu{position:fixed;z-index:10;min-width:170px;padding:5px;border-radius:10px;background:var(--panel);border:1px solid var(--line);box-shadow:0 10px 28px rgba(15,23,42,.2)}
+#menu button{display:block;width:100%;text-align:left;padding:8px 11px;border:0;border-radius:6px;background:none;color:var(--text);font-size:12.5px}
+#menu button:hover,#menu button:focus-visible{background:var(--brand);color:#fff;outline:none}
+#menu button.danger{color:var(--danger)}
+#menu button.danger:hover,#menu button.danger:focus-visible{background:var(--danger);color:#fff}
+#menu hr{border:0;border-top:1px solid var(--line);margin:4px 2px}
+
+#toast{position:fixed;left:50%;bottom:52px;transform:translateX(-50%);max-width:min(560px,90vw);padding:11px 18px;border-radius:10px;
+  background:#262b3d;color:#fff;font-size:12.5px;line-height:1.6;box-shadow:0 8px 24px rgba(15,23,42,.25);z-index:20}
+#toast.error{background:#924653}
+
+@media (prefers-reduced-motion:reduce){.tile.fresh .shot{animation:none}}
+@media (max-width:520px){.bar{padding:12px 14px}.title p{display:none}main{padding:4px 14px 16px}.grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}}

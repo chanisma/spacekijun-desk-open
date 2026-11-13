@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>스페이스기전 독</title>
+  <link rel="stylesheet" href="fonts.css">
+  <link rel="stylesheet" href="dock-tones.css">
+  <link rel="stylesheet" href="dock.css">
+  <script src="dock-items.js" defer></script>
+  <script src="dock.js" defer></script>
+</head>
+<body class="booting" data-anchor="bottom">
+<div id="stage">
+  <div id="bubble" role="status" aria-live="polite" hidden></div>
+  <div id="menu" role="menu" hidden>
+    <button role="menuitem" data-menu="desk">데스크 열기</button>
+    <button role="menuitem" data-menu="turn" id="menu-turn">세로로 놓기</button>
+    <button role="menuitem" data-menu="hide">독 숨기기</button>
+  </div>
+  <nav id="shelf" aria-label="스페이스기전 독"></nav>
+</div>
+</body>
+</html>

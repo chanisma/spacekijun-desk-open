@@ -1,0 +1,373 @@
+{
+  "bd_auto_clean": {
+    "source": "Scene/Level/Buildings/bd_auto_clean.tscn.remap",
+    "clips": [
+      {
+        "name": "clean_end",
+        "duration": 0.2,
+        "sprite_frames": [
+          20,
+          21
+        ],
+        "path": "Broom:frame"
+      },
+      {
+        "name": "clean_pre",
+        "duration": 0.3,
+        "sprite_frames": [
+          11,
+          12,
+          13
+        ],
+        "path": "Broom:frame"
+      },
+      {
+        "name": "cleaning",
+        "duration": 0.6,
+        "sprite_frames": [
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "path": "Broom:frame"
+      },
+      {
+        "name": "idle",
+        "duration": 0.1,
+        "sprite_frames": [
+          0
+        ],
+        "path": "Broom:frame"
+      },
+      {
+        "name": "move",
+        "duration": 1.6,
+        "sprite_frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "path": "Broom:frame"
+      }
+    ],
+    "nodes": [
+      "BD_AutoClean",
+      "z_index",
+      "script",
+      "facility_data",
+      "area_2d",
+      "BuildingNode",
+      "Node2D",
+      "Area2D",
+      "CollisionShape2D",
+      "position",
+      "shape",
+      "Trunk",
+      "unique_name_in_owner",
+      "texture",
+      "Sprite2D",
+      "Broom",
+      "hframes",
+      "vframes",
+      "IdlePos",
+      "AnimPlayer",
+      "libraries",
+      "next/clean_pre",
+      "AnimationPlayer",
+      "Particles1",
+      "emitting",
+      "amount",
+      "lifetime",
+      "randomness",
+      "lifetime_randomness",
+      "local_coords",
+      "emission_shape",
+      "emission_rect_extents",
+      "direction",
+      "spread",
+      "gravity",
+      "initial_velocity_min",
+      "initial_velocity_max",
+      "angular_velocity_max",
+      "linear_accel_min",
+      "linear_accel_max",
+      "scale_amount_min",
+      "scale_amount_max",
+      "CPUParticles2D",
+      "Particles2",
+      "angular_velocity_min",
+      "_on_anim_player_animation_finished",
+      "animation_finished"
+    ]
+  },
+  "bd_auto_feed": {
+    "source": "Scene/Level/Buildings/bd_auto_feed.tscn.remap",
+    "clips": [
+      {
+        "name": "close_door",
+        "duration": 0.6,
+        "sprite_frames": [
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "path": "Sprite:frame"
+      },
+      {
+        "name": "open_door",
+        "duration": 0.8,
+        "sprite_frames": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "path": "Sprite:frame"
+      },
+      {
+        "name": "spawn_food",
+        "duration": 0.8,
+        "sprite_frames": [
+          6,
+          7,
+          8,
+          9
+        ],
+        "path": "Sprite:frame"
+      }
+    ],
+    "nodes": [
+      "BD_AutoFeed",
+      "z_index",
+      "script",
+      "facility_data",
+      "area_2d",
+      "facility_id",
+      "BuildingNode",
+      "Node2D",
+      "Area2D",
+      "monitoring",
+      "CollisionShape2D",
+      "position",
+      "shape",
+      "Sprite",
+      "unique_name_in_owner",
+      "texture",
+      "hframes",
+      "vframes",
+      "Sprite2D",
+      "AnimationPlayer",
+      "libraries",
+      "ThrowPos",
+      "Timer",
+      "wait_time",
+      "one_shot",
+      "autostart",
+      "_on_timer_timeout",
+      "timeout"
+    ]
+  },
+  "bd_auto_pick": {
+    "source": "Scene/Level/Buildings/bd_auto_pick.tscn.remap",
+    "clips": [],
+    "nodes": [
+      "BD_AutoPick",
+      "z_index",
+      "script",
+      "facility_data",
+      "area_2d",
+      "facility_id",
+      "BuildingNode",
+      "Node2D",
+      "Area2D",
+      "CollisionShape2D",
+      "position",
+      "shape",
+      "Home",
+      "unique_name_in_owner",
+      "texture",
+      "Sprite2D",
+      "Bee",
+      "visible",
+      "sprite_frames",
+      "autoplay",
+      "AnimatedSprite2D",
+      "HomePos",
+      "SearchTimer",
+      "autostart",
+      "Timer",
+      "_on_search_timeout",
+      "timeout"
+    ]
+  },
+  "bd_baby_creater": {
+    "source": "Scene/Level/Buildings/bd_baby_creater.tscn.remap",
+    "clips": [
+      {
+        "name": "creating",
+        "duration": 6.0,
+        "sprite_frames": [
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35
+        ],
+        "path": "Sprite:frame"
+      },
+      {
+        "name": "finish",
+        "duration": 1.1,
+        "sprite_frames": [
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          0
+        ],
+        "path": "Sprite:frame"
+      },
+      {
+        "name": "start",
+        "duration": 1,
+        "sprite_frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "path": "Sprite:frame"
+      },
+      {
+        "name": "waiting",
+        "duration": 1.6,
+        "sprite_frames": [
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27
+        ],
+        "path": "Sprite:frame"
+      }
+    ],
+    "nodes": [
+      "BD_BabyCreater",
+      "z_index",
+      "script",
+      "area_2d",
+      "facility_id",
+      "BabyCreater",
+      "BuildingNode",
+      "Node2D",
+      "Area2D",
+      "position",
+      "monitoring",
+      "CollisionShape2D",
+      "shape",
+      "Sprite",
+      "unique_name_in_owner",
+      "texture",
+      "hframes",
+      "vframes",
+      "Sprite2D",
+      "AnimPlayer",
+      "libraries",
+      "AnimationPlayer",
+      "FloatingHeart",
+      "visible",
+      "Left",
+      "Right",
+      "flip_h"
+    ]
+  }
+}

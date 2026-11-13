@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- 수업 폴더(files/sessions/…) — 드라이브에서 받은 파일만 다른 앱에 넘긴다 -->
+    <files-path name="sessions" path="sessions/" />
+    <!-- 자동 업데이트로 받은 새 판(cache/update/…) -->
+    <cache-path name="update" path="update/" />
+</paths>

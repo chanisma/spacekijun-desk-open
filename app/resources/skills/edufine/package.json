@@ -1,0 +1,12 @@
+{
+  "name": "edufine-skill",
+  "version": "1.0.0",
+  "private": true,
+  "description": "K-에듀파인 업무포털 자동화 (문서 검색·공문 다운로드·기안·지출품의) — Claude Code / Codex 스킬",
+  "scripts": {
+    "setup": "node scripts/edufine.js setup",
+    "session": "node scripts/edufine.js session start"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": { "playwright": "^1.47.0" }
+}

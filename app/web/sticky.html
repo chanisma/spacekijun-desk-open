@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>메모</title>
+  <link rel="stylesheet" href="fonts.css">
+  <link rel="stylesheet" href="sticky.css">
+  <script src="sticky.js" defer></script>
+</head>
+<body>
+<!-- 제목 표시줄이 없는 창이다 (desktop.py `_sticky_open`). 가운데 빈 곳을 잡고 끌어 옮긴다. -->
+<header class="bar">
+  <button id="new-note" class="icon" title="새 메모 (Ctrl+N)" aria-label="새 메모">+</button>
+  <span id="status" class="status pywebview-drag-region" role="status" aria-live="polite" title="잡고 끌어 옮기기">불러오는 중…</span>
+  <button id="pin" class="icon" title="항상 위에 표시" aria-label="항상 위에 표시" aria-pressed="false">📌</button>
+  <button id="menu-toggle" class="icon" title="메뉴" aria-label="메뉴" aria-expanded="false" aria-controls="menu">⋯</button>
+  <button id="close" class="icon close" title="닫기 (메모는 남습니다)" aria-label="메모 창 닫기">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17"/></svg>
+  </button>
+</header>
+<div id="menu" class="menu" hidden>
+  <div id="colors" class="colors" role="group" aria-label="메모 색"></div>
+  <button id="show-list" class="menu-item">메모 목록 보기</button>
+  <button id="delete-note" class="menu-item danger">메모 삭제</button>
+  <p class="menu-help"><b># 제목</b> · <b>## 소제목</b> · <b>- 목록</b> · 웹 주소는 눌러서 열 수 있어요</p>
+</div>
+<!-- 보기: 제목은 크게, 웹 주소는 링크로. 누르면 그 자리에서 고치기(textarea)로 바뀐다 -->
+<div id="view" class="view" tabindex="0" aria-label="메모 내용 — 누르면 고칠 수 있습니다" hidden></div>
+<textarea id="content" aria-label="메모 내용" placeholder="메모를 입력하세요…  (# 제목, - 목록, 웹 주소는 링크로)" spellcheck="false" disabled></textarea>
+<footer class="foot"><span>나만 볼 수 있는 메모 · 스페이스기전 협업노트에 저장</span><span id="grip" class="grip" title="끌어서 크기 바꾸기" aria-hidden="true"></span></footer>
+</body>
+</html>

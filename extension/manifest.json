@@ -1,0 +1,39 @@
+{
+    "manifest_version": 3,
+    "name": "NEIS Scraper",
+    "version": "1.0",
+    "description": "Automates downloading of Subject Specific Ability(생활기록부) from NEIS.",
+    "permissions": [
+        "activeTab",
+        "scripting",
+        "downloads",
+        "storage",
+        "sidePanel"
+    ],
+    "host_permissions": [
+        "*://*.neis.go.kr/*",
+        "*://neis.go.kr/*",
+        "file:///*"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "action": {
+        "default_title": "NEIS Scraper 사이드바 열기"
+    },
+    "side_panel": {
+        "default_path": "popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*.neis.go.kr/*",
+                "*://neis.go.kr/*",
+                "file:///*"
+            ],
+            "js": [
+                "content.js"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>스페이스기전 교실</title>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="classroom.css">
+</head>
+<body>
+<!-- QR — 휴대폰으로 찍어 승인 -->
+<section id="view-qr" class="view full" hidden>
+  <header class="top">
+    <div class="brand"><span class="mark">S</span>스페이스기전 교실</div>
+    <button id="open-settings" class="ghost" type="button" aria-label="이 기기 설정">기기 설정</button>
+  </header>
+  <div class="qr-stage">
+    <div class="qr-card">
+      <div id="qr" class="qr" role="img" aria-label="연결 QR 코드"></div>
+      <button id="wake" class="primary wake" type="button" hidden>연결 QR 띄우기</button>
+      <div id="qr-timer" class="qr-timer"></div>
+    </div>
+    <div class="qr-copy">
+      <p class="device-label">이 기기</p>
+      <h1 id="device-name"></h1>
+      <ol class="steps">
+        <li>휴대폰 카메라로 왼쪽 QR 을 찍으세요.</li>
+        <li>스페이스기전에서 이 반 세팅을 고르고 <b>이 기기에 펼치기</b>를 누르세요.</li>
+        <li>화면 아래 독에서 <b>구글 앱 · 내 드라이브 · 사이트 · 프로그램</b>을 눌러 여세요.</li>
+        <li>수업이 끝나면 고친 파일은 드라이브에 올리고, 열린 창과 받은 파일, 로그인은 지웁니다.</li>
+      </ol>
+      <p id="notice" class="notice" hidden></p>
+      <div class="setup">
+        <div id="setup-qr" class="setup-qr" role="img" aria-label="세팅 만들기 QR"></div>
+        <p>
+          <b>아직 세팅이 없나요?</b><br>
+          이 QR 을 찍거나 스페이스기전 메뉴 <b>[도구] → 교실 기기</b>에서 반마다 만들어 두세요.
+          구글 앱·패들렛·ChatGPT 같은 사이트와 드라이브 폴더를 눌러서 넣습니다.
+        </p>
+      </div>
+    </div>
+  </div>
+  <footer class="clock" id="clock"></footer>
+</section>
+
+<!-- 서버에 닿지 않을 때 -->
+<section id="view-offline" class="view full center" hidden>
+  <div class="message-card">
+    <h1>연결을 기다리는 중</h1>
+    <p id="offline-text"></p>
+  </div>
+</section>
+
+<!-- 겹창은 <dialog> 가 아니라 보통 div — 전자칠판 터치에서 <dialog>(showModal) 안 단추가 눌리지 않았다(2026-10-14) -->
+<div id="settings" class="modal" hidden>
+  <div class="settings-form" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <h2 id="settings-title">이 기기 설정</h2>
+    <label>기기 이름 <small>(교사 휴대폰에 보입니다 — 예: 2-3 교실)</small>
+      <input id="name-input" maxlength="40" autocomplete="off">
+    </label>
+    <label class="check">
+      <input id="autostart" type="checkbox">
+      <span>Windows 를 켜면 자동으로 실행 <small id="autostart-note">(교실 PC 는 켜 두는 것을 권합니다)</small></span>
+    </label>
+    <p class="muted">추가 프로그램은 설정 파일에 등록합니다:<br><code id="settings-path"></code></p>
+    <div class="update-row">
+      <div>
+        <b>판 <span id="app-version"></span></b>
+        <small id="update-note">새 판은 30분마다 확인해 수업이 없을 때 바꿉니다.</small>
+      </div>
+      <button id="update-check" class="ghost" type="button">새 판 확인</button>
+      <button id="update-install" class="primary" type="button" hidden>지금 바꾸기</button>
+    </div>
+    <div class="row">
+      <button id="quit-open" class="ghost danger-text" type="button">프로그램 끝내기</button>
+      <span class="spacer"></span>
+      <button id="settings-close" class="ghost" type="button">닫기</button>
+      <button id="save-name" class="primary" type="button">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- 프로그램 끝내기 확인 — 창의 ✕ 는 내리기만 한다(항상 켜져 있게) -->
+<div id="quit-dialog" class="modal" hidden>
+  <div class="settings-form" role="alertdialog" aria-modal="true" aria-labelledby="quit-title">
+    <h2 id="quit-title">프로그램을 끝낼까요?</h2>
+    <p class="muted">끝내면 이 PC 에 QR 이 뜨지 않아 선생님들이 연결할 수 없습니다. 다음에 Windows 를 켜면(자동 실행이 켜져 있으면) 다시 켜집니다.
+      화면에서 잠깐 치우려면 창의 ✕ 를 누르세요 — 바탕화면 오른쪽 아래에 작은 QR 로 남습니다.</p>
+    <div class="row">
+      <button id="quit-no" class="ghost" type="button">취소</button>
+      <button id="quit-yes" class="danger" type="button">끝내기</button>
+    </div>
+  </div>
+</div>
+
+<script src="classroom.js"></script>
+</body>
+</html>

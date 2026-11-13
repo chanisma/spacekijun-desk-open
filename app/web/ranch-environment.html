@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>별사이 목장 · 시설과 풍경</title><link rel="stylesheet" href="fonts.css">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f1e8;color:#373442;font-family:Pretendard,system-ui,sans-serif}main{max-width:1200px;margin:40px auto;padding:0 28px}small{color:#697b69;letter-spacing:.1em}h1{margin:12px 0;font-size:32px}p{color:#776e79;line-height:1.7}nav{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:24px 0}select,button{padding:10px 14px;border:1px solid #d4d5c4;border-radius:8px;background:#fffdf7;color:inherit;font:inherit}button{cursor:pointer}canvas{width:100%;height:auto;image-rendering:pixelated;background:#e7eee6;border-radius:16px;border:1px solid #d6d7ca}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}article{border:1px solid #ded8cb;border-radius:12px;padding:18px;background:#fffdf7}h2{font-size:17px;margin:0 0 8px}article p{font-size:13px;margin:0}a{color:#647c58}footer{border-top:1px solid #ded8cb;padding-top:18px;margin-top:24px;font-size:13px;color:#776e79}@media(max-width:700px){.cards{grid-template-columns:1fr 1fr}main{margin-top:24px;padding:0 16px}h1{font-size:26px}}
+</style>
+<script src="ranch-data.js"></script><script src="ranch/sprites/atlas.js"></script><script src="ranch/originals/atlas.js"></script><script src="ranch/environment/atlas.js"></script></head>
+<body><main><small>BYEOLSAI PASTURE · ORIGINAL ENVIRONMENT</small><h1>움직이는 시설, 새로운 풍경</h1><p>달씨앗 풀밭에서 아카데미와 물가, 퇴근길까지.<br>새 시설 4종의 작동 모습을 미리 볼 수 있어요.</p>
+<nav><label>풍경 <select id="bg"><option value="meadow">달씨앗 풀밭</option><option value="academy">아카데미 언덕</option><option value="drowned">물빛 물가</option><option value="isekai">이세계 퇴근길</option></select></label><label>시설 <select id="mode"><option value="work">작동 모습</option><option value="idle">쉬는 모습</option></select></label><button id="pause" aria-pressed="false">일시 정지</button><button id="restart">처음부터</button></nav>
+<label>화면 너비 <select id="width"><option>1120</option><option>1920</option><option>3440</option><option>5120</option><option>7680</option></select></label><p>넓은 화면은 아래 풍경을 가로로 스크롤해서 볼 수 있어요.</p>
+<div style="overflow-x:auto"><canvas id="scene" width="1120" height="310" style="width:1120px;max-width:none" aria-label="시설 4종과 오리지널 배경 동작 미리보기"></canvas></div><p id="status" role="status">그림을 불러오고 있어요.</p>
+<h2>목장의 모든 소품과 시설</h2><div id="inventory" class="cards"></div>
+<div class="cards"><article><h2>마법 빗자루</h2><p>청소할 곳까지 날아가 쓸고, 원래 자리로 돌아와요.</p></article><article><h2>전서구 급식함</h2><p>문이 열리고 씨앗 장치가 움직여 먹이를 보내요.</p></article><article><h2>반딧불 채집통</h2><p>뚜껑을 열고 일꾼이 조각을 모으러 다녀와요.</p></article><article><h2>별빛 장막</h2><p>번식 중에는 커튼이 움직이고, 완료되면 열려요.</p></article></div>
+<footer>이 화면은 저장자료를 변경하지 않는 동작 미리보기입니다. 실제 목장에서는 시설이 일을 할 때 재생됩니다.<br><a href="ranch-originals.html">오리지널 캐릭터 보기</a> · <a href="../../docs/ranch-art/ENVIRONMENT.md">제작 기록</a></footer></main>
+<script>
+'use strict';
+const atlas=window.RANCH_ATLAS,canvas=document.querySelector('#scene'),g=canvas.getContext('2d'),pictures=new Map();
+const bg=document.querySelector('#bg'),mode=document.querySelector('#mode'),pause=document.querySelector('#pause');
+let elapsed=0,last=0,paused=false;
+function sprite(key,frame,x,base,zoom=3){const m=atlas.sheets[key],im=pictures.get(m.src),s=zoom/(m.pixelRatio||1),[w,h]=m.cell;g.drawImage(im,frame%m.columns*w,Math.floor(frame/m.columns)*h,w,h,x-m.anchor[0]*s,base-m.anchor[1]*s,w*s,h*s);}
+async function init(){
+ const ids=['facility_broom','facility_feeder','facility_jar','facility_curtain','rabbit_adult','chick_adult','fox_adult',...['meadow','academy','drowned','isekai'].map(s=>'bg_'+s)];
+ await Promise.all(ids.map(k=>new Promise((ok,bad)=>{const i=new Image(),src=atlas.sheets[k].src;i.onload=()=>{pictures.set(src,i);ok();};i.onerror=bad;i.src=src;})));
+ document.querySelector('#status').textContent='시설 4종 · 32프레임 · 배경 4종 · 3개 풍경 층';window.environmentPreviewReady=true;requestAnimationFrame(draw);
+}
+function draw(now){if(!paused)elapsed+=Math.min(60,last?now-last:0);last=now;g.imageSmoothingEnabled=false;
+ g.fillStyle=bg.value==='isekai'?'#e5dfed':'#e7eee6';g.fillRect(0,0,canvas.width,310);
+ const bm=atlas.bgs[bg.value],bi=pictures.get(atlas.sheets['bg_'+bg.value].src);
+ for(const l of bm.layers){const k=1.6,w=l.w*k,h=l.h*k,stride=(l.w-(l.overlap||0))*k;let i=0;
+  for(let x=-stride*(l.phase||0);x<canvas.width;x+=stride,i++){g.save();g.translate(x+(i%2?w:0),310-h);g.scale(i%2?-1:1,1);g.drawImage(bi,0,l.y,l.w,l.h,0,0,w,h);g.restore();}}
+ const t=elapsed%4800,work=mode.value==='work',base=286;
+ const move=work?(t<800?t/800:t<2000?1:t<2800?1-(t-2000)/800:0):0;
+ sprite('facility_broom',work?(t<800?2:t<2000?4+Math.floor(t/160)%3:t<2800?3:0):Math.floor(elapsed/900)%2,120+move*120,base-(work&&move>0&&move<1?14:0));
+ sprite('facility_feeder',work?Math.min(7,Math.floor(t/400)):0,390,base);
+ sprite('facility_jar',work?Math.min(7,Math.floor(t/400)):Math.floor(elapsed/800)%2,670,base);
+ sprite('facility_curtain',work?(t<1000?Math.floor(t/300):t<3500?4+Math.floor(t/300)%2:t<4100?6:7):0,960,base);
+ sprite('rabbit_adult',0,285,base,2);sprite('chick_adult',0,510,base,2);sprite('fox_adult',0,790,base,2);
+ if(work){const k=(t%3000)/3000,x=670+120*Math.sin(k*Math.PI),y=base-96-Math.sin(k*Math.PI)*22;g.fillStyle='#fff7cd';g.fillRect(x-8,y-4,6,3);g.fillRect(x+2,y-4,6,3);g.fillStyle='#e9b952';g.fillRect(x-2,y,5,5);}
+ requestAnimationFrame(draw);
+}
+document.querySelector('#width').onchange=e=>{canvas.width=Number(e.target.value);canvas.style.width=canvas.width+'px';};
+const itemNames=['울타리','작은 집','물그릇','꽃밭','먹이','곡물','치료제','물약','씨앗 봉투','도시락','알','조각','먹이통','똥','먹이 주머니','새싹','마법 빗자루','전서구 급식함','반딧불 채집통','별빛 장막'];
+const itemImage=new Image();itemImage.onload=()=>Object.entries(atlas.items).forEach(([key,box],i)=>{const card=document.createElement('article'),c=document.createElement('canvas');c.width=96;c.height=96;c.style.cssText='width:96px;height:96px;border:0;background:transparent';const ctx=c.getContext('2d');ctx.imageSmoothingEnabled=false;const [x,y,w,h]=box,k=Math.min(80/w,80/h);ctx.drawImage(itemImage,x,y,w,h,(96-w*k)/2,(96-h*k)/2,w*k,h*k);const title=document.createElement('h2');title.textContent=itemNames[i]||key;card.append(c,title);document.querySelector('#inventory').append(card);});itemImage.src=atlas.itemsSrc;
+pause.onclick=()=>{paused=!paused;pause.textContent=paused?'재생':'일시 정지';pause.setAttribute('aria-pressed',String(paused));};document.querySelector('#restart').onclick=()=>elapsed=0;
+init().catch(()=>document.querySelector('#status').textContent='그림을 불러오지 못했어요. 파일 경로를 확인해 주세요.');
+</script></body></html>

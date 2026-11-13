@@ -1,0 +1,55 @@
+:root{--bg:#f4f6fb;--card:#fff;--ink:#1e293b;--muted:#64748b;--line:#e3e7f0;--brand:#4f46e5;--warn:#c2410c;--danger:#b4232a;--ok:#15803d;
+  font-family:'Pretendard Variable',Pretendard,'Malgun Gothic',system-ui,sans-serif;color:var(--ink);background:var(--bg);font-synthesis:none}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#11141c;--card:#1a1f2b;--ink:#e6e9f2;--muted:#9aa3b8;--line:#2a3142;--brand:#8b85ff;--warn:#fb923c;--danger:#f87171;--ok:#4ade80}}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:var(--bg);overflow:hidden}
+button,input{font:inherit}button{cursor:pointer;border-radius:10px;border:1px solid transparent;padding:10px 16px;font-weight:600}
+button:focus-visible,input:focus-visible{outline:3px solid #a5b4fc;outline-offset:2px}
+[hidden]{display:none!important}h1,h2,p{margin:0}
+.ghost{background:transparent;border-color:var(--line);color:var(--muted)}.ghost:hover{color:var(--ink);border-color:var(--muted)}
+.primary{background:var(--brand);color:#fff}.danger{background:var(--danger);color:#fff}
+.view{height:100%}.center{display:grid;place-items:center;padding:24px}
+
+/* QR 화면 */
+.full{display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;align-items:center;padding:22px 32px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.4px}
+.mark{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:var(--brand);color:#fff;font-size:15px}
+.qr-stage{flex:1;display:flex;align-items:center;justify-content:center;gap:clamp(28px,6vw,96px);padding:0 32px;flex-wrap:wrap}
+.qr-card{background:#fff;border-radius:24px;padding:22px;box-shadow:0 18px 50px #3240781a;border:1px solid var(--line);text-align:center}
+.qr{width:min(42vh,420px);height:min(42vh,420px)}.qr svg{width:100%;height:100%;display:block}
+/* 쉬는 중(밤·주말) — QR 자리에 큰 단추 */
+.wake{width:min(42vh,420px);height:min(42vh,420px);font-size:28px;border-radius:18px}
+.qr-timer{margin-top:10px;font-size:13px;color:#64748b;font-variant-numeric:tabular-nums}
+.qr-copy{max-width:460px}
+.device-label{color:var(--muted);font-size:14px;font-weight:600;letter-spacing:.3px}
+.qr-copy h1{font-size:clamp(28px,4.4vw,48px);letter-spacing:-1.5px;margin:4px 0 22px;overflow-wrap:anywhere}
+.steps{margin:0;padding-left:22px;font-size:17px;line-height:1.9}.steps li::marker{color:var(--brand);font-weight:700}
+.notice{margin-top:18px;padding:10px 14px;border-radius:10px;background:color-mix(in srgb,var(--brand) 10%,transparent);color:var(--ink);font-size:14px}
+.hint{margin-top:22px;color:var(--muted);font-size:14px;line-height:1.7}
+.setup{display:flex;gap:16px;align-items:center;margin-top:26px;padding:14px 16px;border:1px dashed var(--line);border-radius:14px;background:var(--card)}
+.setup-qr{width:96px;height:96px;flex-shrink:0;background:#fff;border-radius:8px;padding:4px}.setup-qr svg{width:100%;height:100%;display:block}
+.setup p{color:var(--muted);font-size:13px;line-height:1.7}.setup b{color:var(--ink)}
+.clock{padding:14px 32px 22px;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums;font-size:15px}
+.message-card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:36px 40px;max-width:520px;text-align:center}
+.message-card h1{font-size:24px;margin-bottom:10px}.message-card p{color:var(--muted);line-height:1.8}
+
+.modal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px;background:#0f172a80}
+.modal[hidden]{display:none}
+.settings-form{padding:24px;display:flex;flex-direction:column;gap:16px;width:min(480px,92vw);max-height:100%;overflow:auto;
+  border:1px solid var(--line);border-radius:18px;background:var(--card);color:var(--ink);box-shadow:0 30px 80px #0f172a40}
+.settings-form button{min-height:44px;touch-action:manipulation}
+.settings-form label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600}
+.settings-form .check{flex-direction:row;align-items:flex-start;gap:10px;font-weight:600}
+.settings-form .check input{width:18px;height:18px;margin-top:2px;accent-color:var(--brand)}
+.settings-form small,.muted{color:var(--muted);font-weight:400;font-size:12px;line-height:1.6}
+.settings-form input{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--bg);color:var(--ink)}
+code{font-size:11px;overflow-wrap:anywhere}
+.row{display:flex;justify-content:flex-end;gap:8px;align-items:center}.row .spacer{flex:1}
+.danger-text{color:var(--danger)!important;border-color:transparent!important}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+
+/* 기기 설정 — 새 판 확인·바꾸기 */
+.update-row{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+.update-row>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-size:14px}
+.update-row small{color:var(--muted);font-size:12px;line-height:1.5}
+.update-row small.ok{color:var(--ok)}.update-row small.err{color:var(--danger)}

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>스페이스기전 교실</title>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="dock-tones.css">
+<link rel="stylesheet" href="classroom-dock.css">
+</head>
+<body>
+<div id="dock" class="dock">
+  <div class="who pywebview-drag-region" title="끌어서 옮기기">
+    <strong id="teacher"></strong>
+    <span id="title"></span>
+    <span id="line" class="line"></span>
+  </div>
+  <div class="sep" aria-hidden="true"></div>
+  <ul id="items" class="items" aria-label="수업 세팅"></ul>
+  <div class="sep" aria-hidden="true"></div>
+  <div class="time">
+    <button id="extend" class="clock" type="button" title="눌러서 10분 연장">
+      <strong id="remaining">--:--</strong>
+      <span>+10분</span>
+    </button>
+    <button id="finish" class="end" type="button">수업 끝</button>
+  </div>
+  <div id="ending" class="ending" hidden>
+    <span class="spin" aria-hidden="true"></span>
+    <span id="progress">정리하는 중입니다.</span>
+  </div>
+</div>
+<script src="classroom-dock.js"></script>
+</body>
+</html>

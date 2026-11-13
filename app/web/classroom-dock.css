@@ -1,0 +1,59 @@
+/* 스페이스기전 교실 — 수업 중 화면 아래 독. 데스크 독(dock.css)과 같은 판·아이콘 모양,
+   창은 유리 대신 둥근 모서리의 단색 창이다(classroom.py round_corners). */
+:root{
+  font-family:'Pretendard Variable',Pretendard,'Malgun Gothic',system-ui,sans-serif;
+  --shelf:#eef0f6;--ink:#1e293b;--muted:#64748b;--line:rgba(15,23,42,.12);
+  --warn:#c2410c;--danger:#b4232a;--ok:#15803d;--brand:#4f46e5;--icon:50px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--shelf:#22242e;--ink:#e6e9f2;--muted:#9aa3b8;--line:rgba(255,255,255,.14);
+    --warn:#fb923c;--danger:#f87171;--ok:#4ade80;--brand:#a5b4fc}
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--shelf);color:var(--ink);overflow:hidden;user-select:none;-webkit-user-select:none}
+button{font:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid #a5b4fc;outline-offset:2px}
+[hidden]{display:none!important}
+
+.dock{position:relative;height:100%;display:flex;align-items:center;gap:12px;padding:10px 14px}
+.sep{width:1px;align-self:stretch;margin:8px 0;background:var(--line);flex-shrink:0}
+
+.who{width:170px;flex-shrink:0;display:flex;flex-direction:column;gap:2px;cursor:grab;min-width:0}
+.who strong{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who span{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who .line{color:var(--brand);font-size:11px;white-space:normal;line-height:1.35;max-height:30px;overflow:hidden}
+.who .line.error{color:var(--danger)}
+
+.items{list-style:none;margin:0;padding:0;display:flex;gap:4px;flex:1;min-width:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
+.items::-webkit-scrollbar{display:none}
+.items li{flex-shrink:0}
+.tile{width:74px;display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:0;padding:4px 2px;border-radius:12px;color:var(--ink)}
+.tile:hover{background:rgba(127,127,127,.12)}
+.tile:active .glyph{transform:scale(.94)}
+.glyph{position:relative;width:var(--icon);height:var(--icon);border-radius:23%;display:grid;place-items:center;color:#fff;
+  font-weight:800;font-size:20px;letter-spacing:-.5px;background:linear-gradient(160deg,var(--a),var(--b));
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.22),inset 0 1px 0 rgba(255,255,255,.35),0 2px 6px rgba(15,23,42,.18);
+  transition:transform .12s}
+.glyph svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.glyph.img{background:none;box-shadow:none}
+.glyph.img img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(15,23,42,.18))}
+.label{font-size:11px;max-width:72px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile.off .glyph{filter:grayscale(1);opacity:.55}
+.badge{position:absolute;right:-6px;top:-6px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--warn);
+  color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center;border:2px solid var(--shelf)}
+.badge.err{background:var(--danger)}
+.badge.ok{background:var(--ok)}
+.tile.opening .glyph::after{content:'';position:absolute;inset:-4px;border-radius:28%;border:2px solid transparent;
+  border-top-color:var(--brand);animation:spin .8s linear infinite}
+
+.time{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.clock{display:flex;flex-direction:column;align-items:center;background:transparent;border:1px solid var(--line);border-radius:12px;padding:6px 12px;color:var(--ink)}
+.clock strong{font-size:22px;font-variant-numeric:tabular-nums;line-height:1.1}
+.clock span{font-size:11px;color:var(--muted)}
+.clock.warn{border-color:var(--warn)}.clock.warn strong{color:var(--warn)}
+.end{background:var(--danger);color:#fff;border:0;border-radius:12px;padding:14px 18px;font-weight:700}
+
+.ending{position:absolute;inset:0;background:var(--shelf);display:flex;align-items:center;justify-content:center;gap:12px;font-size:14px;padding:0 24px;text-align:center}
+.spin{width:20px;height:20px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--brand);animation:spin 1s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>에이전트 화면 조작 · 멈추기</title>
+  <link rel="stylesheet" href="fonts.css">
+  <!-- 에이전트에게 화면 조작을 허락해 둔 동안 늘 위에 뜨는 막대 (desktop.py `_term_bar_*`). 누르면 모든 허락을 거둔다. -->
+  <style>
+    :root{font-family:'Pretendard Variable',Pretendard,'Malgun Gothic',system-ui,sans-serif;font-size:13px;color-scheme:dark}
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;overflow:hidden;background:#7f1d1d;color:#fff;user-select:none}
+    .bar{display:flex;align-items:center;gap:10px;height:100%;padding:0 8px 0 14px}
+    .dot{width:10px;height:10px;border-radius:50%;background:#fca5a5;flex-shrink:0;animation:pulse 1.2s ease-in-out infinite}
+    @keyframes pulse{50%{opacity:.35}}
+    @media (prefers-reduced-motion:reduce){.dot{animation:none}}
+    .copy{flex:1;min-width:0;line-height:1.3}
+    .copy b{display:block;font-size:12.5px}
+    .copy small{display:block;font-size:11px;color:#fecaca;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    button{font:inherit;font-weight:700;font-size:13px;border:0;border-radius:8px;padding:8px 16px;background:#fff;color:#991b1b;cursor:pointer;flex-shrink:0}
+    button:hover{background:#fee2e2}
+    button:focus-visible{outline:3px solid #fca5a5;outline-offset:2px}
+  </style>
+</head>
+<body>
+<div class="bar pywebview-drag-region">
+  <span class="dot" aria-hidden="true"></span>
+  <div class="copy"><b>에이전트가 화면을 다룰 수 있습니다</b><small id="who">불러오는 중…</small></div>
+  <button id="stop" title="허락해 둔 앱을 모두 거두고 에이전트의 화면 조작을 멈춥니다">멈추기</button>
+</div>
+<script>
+'use strict';
+(() => {
+  const who = document.getElementById('who');
+  async function api(action, payload) {
+    if (!window.pywebview?.api) throw new Error('데스크 프로그램에서 실행해 주세요.');
+    const result = await window.pywebview.api.call(action, payload || {});
+    if (!result.ok) throw new Error(result.error || '요청을 처리하지 못했습니다.');
+    return result.data;
+  }
+  async function refresh() {
+    try {
+      const {grants} = await api('term_computer_list');
+      who.textContent = grants.length
+        ? grants.map(item => `${item.agent} → ${item.app}`).join(' · ')
+        : '허락해 둔 앱이 없습니다';
+    } catch (error) {who.textContent = error.message;}
+  }
+  document.getElementById('stop').addEventListener('click', async () => {
+    try {who.textContent = await api('term_computer_stop');} catch (error) {who.textContent = error.message;}
+  });
+  window.deskBar = {refresh};
+  window.addEventListener('pywebviewready', refresh);
+  setInterval(refresh, 2000);
+})();
+</script>
+</body>
+</html>

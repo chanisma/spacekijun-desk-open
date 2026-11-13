@@ -1,0 +1,9 @@
+pywebview==6.2.1
+playwright>=1.58,<2
+pystray>=0.19,<1
+Pillow>=10
+psutil>=5.9
+segno>=1.6
+cryptography>=42
+websocket-client==1.8.0
+pywinpty>=3.1,<4

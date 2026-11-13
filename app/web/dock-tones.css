@@ -1,0 +1,24 @@
+/* 독 아이콘 색 — 독(dock.css)·독 위 패널(popover.css)·데스크 설정의 '독 아이콘'이 함께 쓴다 */
+.tone-indigo{--a:#818cf8;--b:#4338ca}
+.tone-green{--a:#4ade80;--b:#15803d}
+.tone-blue{--a:#60a5fa;--b:#1d4ed8}
+.tone-teal{--a:#2dd4bf;--b:#0f766e}
+.tone-violet{--a:#c084fc;--b:#7e22ce}
+.tone-orange{--a:#fdba74;--b:#ea580c}
+.tone-rose{--a:#fb7185;--b:#be123c}
+.tone-sky{--a:#7dd3fc;--b:#0284c7}
+.tone-yellow{--a:#fef08a;--b:#facc15;color:#713f12}
+.tone-slate{--a:#94a3b8;--b:#475569}
+.tone-ink{--a:#475569;--b:#0f172a}
+.tone-silver{--a:#e5e7eb;--b:#9ca3af;color:#374151}
+.tone-cyan{--a:#67e8f9;--b:#0891b2}
+.tone-amber{--a:#fcd34d;--b:#d97706}
+.tone-fuchsia{--a:#f0abfc;--b:#a21caf}
+.tone-red{--a:#fca5a5;--b:#dc2626}
+.tone-graphite{--a:#6b7280;--b:#1f2937}
+.tone-lavender{--a:#c4b5fd;--b:#6d28d9}
+.tone-paper{--a:#ffffff;--b:#eef0f4;color:#111827}
+.tone-emerald{--a:#6ee7b7;--b:#047857}
+.tone-pink{--a:#f9a8d4;--b:#db2777}
+.tone-night{--a:#818cf8;--b:#1e1b4b}
+.tone-terminal{--a:#3a3a40;--b:#0b0b0e;color:#f5a065}

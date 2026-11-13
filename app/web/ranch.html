@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>별사이 목장</title>
+  <link rel="stylesheet" href="fonts.css">
+  <link rel="stylesheet" href="ranch.css">
+  <script src="ranch-data.js" defer></script>
+  <script src="ranch/sprites/atlas.js" defer></script>
+  <script src="ranch/originals/atlas.js" defer></script>
+  <script src="ranch/environment/atlas.js" defer></script>
+  <script src="ranch/effects/atlas.js" defer></script>
+  <script src="ranch.js" defer></script>
+</head>
+<body>
+<!-- 별사이 목장 (학생판, 2026-11-06) — 창 아래 STRIP(96px)이 목장 띠, 그 위 PANEL(300px)은 패널을 열 때만 쓴다.
+     창은 유리(투명)이고, 누를 자리만 창 모양으로 남긴다 (desktop.py _ranch_region). -->
+<canvas id="field"></canvas>
+<div id="hud" class="hud">
+  <span id="badge" class="badge" hidden></span>
+  <span class="purse" title="틈새 조각"><i class="ico shard"></i><b id="shards">0</b></span>
+  <span class="purse" title="먹이 창고"><i class="ico food"></i><b id="food">0</b></span>
+  <button id="b-shop" title="상점">상점</button>
+  <button id="b-dex" title="도감">도감</button>
+  <button id="b-deco" title="꾸미기 — 소품을 끌어 옮깁니다">꾸미기</button>
+  <button id="b-view" title="목장의 너비·자리·크기·항상 위">화면</button>
+</div>
+<section id="panel" class="panel" hidden role="dialog" aria-live="polite">
+  <header><h1 id="p-title"></h1><button id="p-close" class="x" aria-label="닫기" title="닫기">×</button></header>
+  <div id="p-body" class="p-body"></div>
+</section>
+<div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>구글 — 스페이스기전 교실</title>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="classroom-popup.css">
+</head>
+<body data-mode="google">
+<div class="google">
+  <header>
+    <span class="g" aria-hidden="true">G</span>
+    <div>
+      <strong>구글</strong>
+      <span id="g-who"></span>
+    </div>
+    <button id="g-close" class="x" type="button" aria-label="닫기">✕</button>
+  </header>
+  <!-- 로그인 없이 — QR 승인 때 받은 권한으로 이 프로그램 안에서(구글 수업 도구, 2026-10-14) -->
+  <div class="tools" aria-label="로그인 없이 바로">
+    <p class="tools-label">로그인 없이 바로</p>
+    <div class="tools-row">
+      <button class="tool" data-tool="classroom" type="button"><img src="icons/google/classroom.png" alt=""><span>클래스룸</span></button>
+      <button class="tool" data-tool="slides" type="button"><img src="icons/google/slides.png" alt=""><span>슬라이드 발표</span></button>
+      <button class="tool" data-tool="forms" type="button"><img src="icons/google/forms.png" alt=""><span>설문지</span></button>
+    </div>
+    <p class="tools-label">웹으로 열기 <small>(구글 로그인 필요)</small></p>
+  </div>
+  <div id="apps" class="apps" aria-label="구글 앱"></div>
+  <footer>
+    <p id="g-status" class="g-status" hidden></p>
+    <p id="g-note"></p>
+    <button id="g-phone" class="btn primary" type="button">휴대폰으로 로그인</button>
+    <button id="g-login" class="btn" type="button">로그인 창 열기</button>
+    <button id="g-forget" class="link" type="button" hidden>이 PC 로그인 지우기</button>
+  </footer>
+</div>
+<script src="classroom-popup.js"></script>
+</body>
+</html>

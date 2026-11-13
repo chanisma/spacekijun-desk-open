@@ -1,0 +1,90 @@
+SPACEKIJUN 교육용 비상업 라이선스 1.0
+(SPACEKIJUN Education Non-Commercial License 1.0)
+
+Copyright (c) 2026 chanisma
+
+한국어 본문이 정본이다. 아래 영어 번역은 참고용이며, 두 글의 뜻이 다르면 한국어 본문을 따른다.
+(The Korean text governs. The English translation below is for reference only.)
+
+────────────────────────────────────────
+
+1. 허락
+   아래 조건을 지키면 누구나 이 저장소의 코드·문서·설정 파일(이하 «소프트웨어»)을
+   무료로 사용·복제·수정·배포할 수 있다. 단, 비영리 목적에 한한다.
+
+2. 학교 안 활용은 자유
+   다음은 따로 허락받지 않고 자유롭게 할 수 있다.
+   (가) 학교(초·중·고·특수학교·대학, 국공립·사립을 가리지 않는다)와 그 교직원·학생이
+        수업·학교 업무·학생 활동에 쓰는 것. 자기 학교에 맞게 고쳐 쓰는 것을 포함한다.
+   (나) 학교 서버나 학교·교육청이 계약한 클라우드에 설치해 운영하는 것.
+   (다) 교육청·교육 연구기관·교사 연구회·비영리 교육 단체가 학교를 돕기 위해 쓰고,
+        고친 것을 다른 학교와 나누는 것.
+   (라) 학교가 외부 업체에 설치·유지보수를 맡기는 것. 단, 그 업체가 이 소프트웨어나
+        수정본을 다른 고객에게 상품으로 팔아서는 안 된다(3조).
+
+3. 상용 서비스 제작은 제한
+   저작권자의 서면 허락 없이 다음은 할 수 없다.
+   (가) 소프트웨어나 그 수정본을 유료로 판매·대여하거나 구독 상품으로 제공하는 것.
+   (나) 소프트웨어나 그 수정본으로 영리 목적의 서비스(웹 서비스·SaaS·호스팅·앱 등)를
+        만들어 학교·기관·개인에게 제공하는 것. 이용료·광고·데이터 판매 등 수익을 내는
+        방식은 묻지 않는다.
+   (다) 영리 기업의 제품이나 사교육(학원·유료 강의 등) 상품에 소프트웨어의 전부나
+        일부를 넣는 것.
+   상용 이용을 원하면 저작권자에게 연락해 별도 허락을 받는다.
+
+4. 표시
+   소프트웨어나 수정본을 배포할 때는 이 라이선스 전문과 저작권 표시를 함께 둔다.
+   수정본에는 고쳤다는 사실을 밝힌다. 수정본에도 이 라이선스의 조건이 그대로 적용된다.
+
+5. 외부 구성 요소
+   외부에서 가져온 코드·글꼴·이미지·라이브러리 등은 각자의 라이선스를 따르며,
+   이 라이선스가 그 조건을 바꾸지 않는다(저장소 안의 THIRD-PARTY 고지·각 LICENSE 파일 참조).
+
+6. 보증 없음
+   소프트웨어는 «있는 그대로» 제공되며, 상품성·특정 목적 적합성·권리 비침해를 포함해
+   어떤 보증도 하지 않는다. 저작권자는 소프트웨어의 사용이나 그와 관련해 생긴 어떤
+   청구·손해·책임도 지지 않는다. 학교에서 운영할 때 개인정보 보호 의무는 운영하는
+   학교·기관에 있다.
+
+────────────────────────────────────────
+
+English translation (reference only)
+
+1. Grant. Anyone may use, copy, modify and distribute the code, documentation and
+   configuration files in this repository (the "Software") free of charge, for
+   non-commercial purposes only, subject to the conditions below.
+
+2. Free use in schools. Without further permission you may:
+   (a) use the Software in a school (primary, secondary, special or higher education,
+       public or private) for teaching, school administration and student activities,
+       including adapting it to your school;
+   (b) install and run it on school servers or on cloud services contracted by a school
+       or education office;
+   (c) as an education office, educational research body, teacher community or
+       non-profit educational organization, use it to support schools and share your
+       modifications with other schools;
+   (d) have an outside contractor install or maintain it for a school, provided the
+       contractor does not sell the Software or modified versions to other customers.
+
+3. Commercial services restricted. Without prior written permission from the copyright
+   holder you may not:
+   (a) sell, rent or offer the Software or modified versions as a subscription product;
+   (b) build a for-profit service (web service, SaaS, hosting, app, etc.) with the
+       Software or modified versions and provide it to schools, institutions or
+       individuals, regardless of the revenue model (fees, advertising, data sales, etc.);
+   (c) include all or part of the Software in a product of a for-profit company or in a
+       private-tutoring / paid-course product.
+   Contact the copyright holder for a separate commercial license.
+
+4. Notice. When distributing the Software or modified versions, include this license and
+   the copyright notice, state that you changed it, and keep these same conditions for
+   modified versions.
+
+5. Third-party components keep their own licenses; this license does not change them.
+
+6. No warranty. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+   PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM, OUT OF OR IN
+   CONNECTION WITH THE SOFTWARE OR ITS USE. A school or institution operating the Software
+   is responsible for its own personal-data protection obligations.

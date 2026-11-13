@@ -1,0 +1,162 @@
+/* 스페이스기전 독 — 바탕화면 아래에 떠 있는 아이콘 줄.
+   창은 투명한 유리다 (desktop.py `_dock_chrome`) — 반투명한 판과 그림자가 아래 화면과 섞인다.
+   그림자는 dock.js 의 SHADOW(30px) 안에 들어와야 한다. 그 밖은 창 모양에서 잘린다. */
+:root{
+  font-family:'Pretendard Variable',Pretendard,'Malgun Gothic',system-ui,sans-serif;
+  --icon:52px;
+  --shelf:rgba(246,247,251,.84);
+  --shelf-line:rgba(255,255,255,.8);
+  --shelf-edge:rgba(15,23,42,.12);
+  --shelf-shadow:0 8px 22px rgba(15,23,42,.20),0 1px 4px rgba(15,23,42,.10);
+  --divider:rgba(15,23,42,.14);
+  --dot:#1e293b;
+  --bubble:#262b3d;
+  --bubble-text:#fff;
+  --bubble-error:#924653;
+  --menu:#fbfbfd;
+  --menu-text:#1e293b;
+  --menu-hover:#4f46e5;
+  --snap:#6366f1;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --shelf:rgba(36,38,48,.82);
+    --shelf-line:rgba(255,255,255,.10);
+    --shelf-edge:rgba(0,0,0,.45);
+    --divider:rgba(255,255,255,.18);
+    --dot:#e2e8f0;
+    --bubble:#eceef4;
+    --bubble-text:#111827;
+    --menu:#2a2c38;
+    --menu-text:#e5e7eb;
+    --menu-hover:#818cf8;
+    --snap:#818cf8;
+  }
+}
+:root[data-theme="dark"]{
+  --shelf:rgba(36,38,48,.82);--shelf-line:rgba(255,255,255,.10);--shelf-edge:rgba(0,0,0,.45);
+  --divider:rgba(255,255,255,.18);--dot:#e2e8f0;--bubble:#eceef4;--bubble-text:#111827;
+  --menu:#2a2c38;--menu-text:#e5e7eb;--menu-hover:#818cf8;--snap:#818cf8;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:transparent;overflow:hidden;user-select:none;-webkit-user-select:none}
+
+/* ── 붙는 쪽(body[data-anchor])마다 자리와 방향이 바뀐다 ─────────────────
+   bottom·top 은 가로, left·right 는 세로. 아이콘은 늘 화면 안쪽으로 커지고,
+   '실행 중' 점은 화면 끝 쪽에 붙는다. --hx·--hy 는 화면 안쪽을 가리키는 방향. */
+#stage{position:relative;height:100%;display:flex;align-items:center;flex-direction:column;justify-content:flex-end;padding:8px}
+body[data-anchor="top"] #stage{justify-content:flex-start}
+body[data-anchor="left"] #stage{flex-direction:row;justify-content:flex-start}
+body[data-anchor="right"] #stage{flex-direction:row;justify-content:flex-end}
+body{--hx:0;--hy:-1}
+body[data-anchor="top"]{--hy:1}
+body[data-anchor="left"]{--hx:1;--hy:0}
+body[data-anchor="right"]{--hx:-1;--hy:0}
+
+#shelf{
+  /* 두께는 고정 — 커진 아이콘은 판 밖으로 솟는다 (맥 독처럼) */
+  flex-shrink:0;display:flex;align-items:flex-end;gap:6px;height:calc(var(--icon) + 25px);
+  padding:7px 10px 9px;border-radius:22px;
+  background:var(--shelf);
+  border:1px solid var(--shelf-edge);
+  box-shadow:inset 0 1px 0 var(--shelf-line),var(--shelf-shadow);
+  cursor:default;
+}
+body[data-anchor="top"] #shelf{align-items:flex-start;padding:9px 10px 7px}
+body[data-anchor="left"] #shelf,body[data-anchor="right"] #shelf{flex-direction:column;height:auto;width:calc(var(--icon) + 25px)}
+body[data-anchor="left"] #shelf{align-items:flex-start;padding:10px 7px 10px 9px}
+body[data-anchor="right"] #shelf{align-items:flex-end;padding:10px 9px 10px 7px}
+/* 끄는 중 화면 끝에 닿았다 — 놓으면 그 끝에 붙는다 */
+#shelf.snapping{border-color:var(--snap);box-shadow:inset 0 0 0 2px var(--snap)}
+body.dragging,body.dragging *{cursor:grabbing!important}
+
+.divider{flex-shrink:0;align-self:stretch;width:1px;margin:6px 5px 4px;background:var(--divider);border-radius:1px}
+body[data-anchor="left"] .divider,body[data-anchor="right"] .divider{width:auto;height:1px;margin:5px 6px}
+
+.item{
+  --s:1;
+  position:relative;flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:3px;
+  width:calc(var(--icon) * var(--s));
+  padding:0;border:0;background:none;cursor:pointer;
+  transition:width .12s cubic-bezier(.2,.8,.2,1),height .12s cubic-bezier(.2,.8,.2,1);
+}
+body[data-anchor="top"] .item{flex-direction:column-reverse}
+body[data-anchor="left"] .item,body[data-anchor="right"] .item{width:auto;height:calc(var(--icon) * var(--s))}
+body[data-anchor="left"] .item{flex-direction:row-reverse}
+body[data-anchor="right"] .item{flex-direction:row}
+/* 크기를 잴 때는 움직임을 끈다 — 커지는 도중의 길이를 재지 않도록 */
+body.measuring .item,body.measuring .tile{transition:none}
+
+.tile{
+  position:relative;flex-shrink:0;display:grid;place-items:center;
+  width:calc(var(--icon) * var(--s));height:calc(var(--icon) * var(--s));
+  border-radius:23%;color:#fff;
+  font:800 calc(var(--icon) * .42 * var(--s))/1 'Pretendard Variable',Pretendard,system-ui,sans-serif;letter-spacing:-.5px;
+  background:linear-gradient(160deg,var(--a),var(--b));
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.22),inset 0 1px 0 rgba(255,255,255,.35),0 3px 8px rgba(15,23,42,.22);
+  transition:width .12s cubic-bezier(.2,.8,.2,1),height .12s cubic-bezier(.2,.8,.2,1);
+  overflow:hidden;
+}
+/* 위쪽 반사광 — 애플 아이콘의 유리 느낌 */
+.tile::after{content:"";position:absolute;inset:0 0 50% 0;background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,0));pointer-events:none}
+.tile svg{width:56%;height:56%;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tile .mini{font-size:calc(var(--icon) * .33 * var(--s));letter-spacing:-1px}
+.item:focus-visible{outline:none}
+.item:focus-visible .tile{box-shadow:0 0 0 3px #a5b4fc,0 3px 8px rgba(15,23,42,.22)}
+.item:active .tile{filter:brightness(.88)}
+
+/* 실행 중 표시 — 아이콘과 화면 끝 사이의 작은 점 */
+.run{flex-shrink:0;width:4px;height:4px;border-radius:50%;background:var(--dot);opacity:0;transition:opacity .2s}
+.item.running .run{opacity:.85}
+/* 이 아이콘의 패널이 펼쳐져 있다 — 점을 강조색으로 */
+.item.open .run{opacity:1;background:var(--snap);width:6px;height:6px}
+
+/* 안 읽은 메시지 수 — 아이콘 오른쪽 위 모서리 */
+.badge{position:absolute;top:-3px;right:-5px;min-width:16px;height:16px;padding:0 4px;border-radius:999px;
+  background:#ef4444;color:#fff;font:700 10px/16px 'Pretendard Variable',Pretendard,system-ui,sans-serif;text-align:center;
+  box-shadow:0 0 0 2px rgba(255,255,255,.9),0 1px 3px rgba(15,23,42,.3);pointer-events:none;z-index:2}
+/* 받아 둔 업데이트 — 숫자 없는 점 (연결 및 설정) */
+.badge.dot{top:-2px;right:-2px;min-width:10px;width:10px;height:10px;padding:0}
+
+/* 여는 중 — 화면 안쪽으로 통통 튄다 */
+.item.launching .tile{animation:bounce .62s cubic-bezier(.3,.7,.4,1) infinite}
+@keyframes bounce{
+  0%,100%{transform:translate(0,0)}
+  45%{transform:translate(calc(var(--hx) * 16px),calc(var(--hy) * 16px))}
+  70%{transform:translate(0,0)}
+  82%{transform:translate(calc(var(--hx) * 4px),calc(var(--hy) * 4px))}
+}
+
+
+/* 달력 아이콘 — 오늘 요일과 날짜 (dock.js paintCalendar) */
+.cal{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.cal small{font-size:calc(var(--icon) * .19 * var(--s));font-weight:700;color:#e5484d;letter-spacing:0}
+.cal b{font-size:calc(var(--icon) * .5 * var(--s));font-weight:500;letter-spacing:-1.5px;margin-top:calc(var(--icon) * .03 * var(--s))}
+
+/* 말풍선 — 가리킨 아이콘 이름, 또는 실행 결과 */
+#bubble{
+  position:absolute;top:0;left:0;
+  max-width:360px;padding:6px 12px;border-radius:9px;
+  background:var(--bubble);color:var(--bubble-text);
+  font-size:12px;font-weight:600;line-height:1.45;letter-spacing:-.2px;text-align:center;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  box-shadow:0 4px 14px rgba(15,23,42,.25);pointer-events:none;z-index:5;
+}
+#bubble.error{background:var(--bubble-error);color:#fff}
+#bubble.wrap{white-space:normal}
+body[data-anchor="left"] #bubble,body[data-anchor="right"] #bubble{max-width:230px;text-align:left}
+
+#menu{
+  position:absolute;top:0;left:0;min-width:150px;padding:5px;border-radius:10px;z-index:6;
+  background:var(--menu);border:1px solid var(--shelf-edge);box-shadow:0 10px 24px rgba(15,23,42,.24);
+}
+#menu button{display:block;width:100%;padding:7px 11px;border:0;border-radius:6px;background:none;color:var(--menu-text);font:inherit;font-size:12.5px;text-align:left;cursor:pointer}
+#menu button:hover,#menu button:focus-visible{background:var(--menu-hover);color:#fff;outline:none}
+[hidden]{display:none!important}
+/* 처음 자리를 잡기 전에는 숨겨 둔다 — 자리를 잡으면 펼치며 나타난다 (dock.js unfold) */
+body.booting #shelf{opacity:0}
+
+@media (prefers-reduced-motion:reduce){
+  .item,.tile{transition:none}
+  .item.launching .tile{animation:none;opacity:.6}
+}

@@ -1,0 +1,6 @@
+{
+  "baseUrl": "https://klef.jbe.go.kr",
+  "cdpPort": 9344,
+  "browserChannel": null,
+  "wxsClient": "C:/Program Files (x86)/kedu/WXSClient.exe"
+}

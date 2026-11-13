@@ -1,0 +1,8 @@
+{
+  "name": "neis-skill",
+  "version": "1.0.0",
+  "private": true,
+  "description": "나이스(NEIS 4세대) 조회 전용 자동화 + 화면 지식 — Claude Code / Codex 스킬",
+  "engines": { "node": ">=20" },
+  "dependencies": { "playwright": "^1.47.0", "xlsx": "^0.18.5" }
+}

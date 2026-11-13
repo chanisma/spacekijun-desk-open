@@ -1,0 +1,12 @@
+Use case: stylized-concept
+Asset type: production transparent pixel-art animation sprite sheet for a small desktop pasture game.
+Input images: Image 1 is our newly created original rabbit sheet, STYLE REFERENCE ONLY for outline, pixel economy, layout and gentle expressions. Image 2 is a landscape PALETTE reference only. Make a completely different original species, not a rabbit, and do not include either reference in the output.
+Character: ACORN DOG: a little biscuit-tan puppy with two large cocoa floppy ears, a cream muzzle, short sturdy legs, a rounded acorn-shaped tail with dark tip, and one small moss-green oval chest marking. Adult has a low elongated body and big ears; baby is rounder with even bigger ears and stubby legs. Cheerful and loyal. No clothes, no props. Dark plum single-pixel outline; 8-12 restrained colors; big compact clusters; no gradients, antialiasing, glow or realistic fur.
+Deliver one square image, preferably 1536x1536, exactly SIX columns by SIX rows, 36 separate sprites. Invisible equal square grid, generous transparent padding between cells. No visible grid, no text, no labels, no ground/shadows.
+Every creature faces RIGHT, same side/three-quarter view, centered in its cell, feet aligned near 82% of cell height. Each adult approximately 24 native pixels tall enlarged as crisp square pixel blocks, each baby approximately 16 pixels tall enlarged at the SAME pixel scale. Keep exact colors/markings and anatomy across frames. Each sprite stays strictly inside its own cell.
+Rows 1-3 are ADULT. Rows 4-6 are BABY, repeat identical action arrangement with baby proportions.
+Row 1: columns 1-2 idle open eyes then blink; columns 3-6 four distinct walking cycle poses (contact, down, passing, up), feet alternate and ears, crest or tail gently lag.
+Row 2: columns 1-4 eating (head down, nibble, chew, swallow; NO food props); columns 5-6 affection reaction (ears or crest perk with happy closed eyes, then tiny pleased bounce).
+Row 3: columns 1-4 curled sleeping with eyes closed and subtle breathing; columns 5-6 seated rest with ears or crest relaxed.
+Rows 4,5,6 repeat rows 1,2,3 as the baby.
+The sheet must have all 36 cells occupied, one isolated sprite each, absolutely no extra sprites or ornaments. Preserve truly transparent background. This is a finished original game sprite asset, not an illustration or mockup.

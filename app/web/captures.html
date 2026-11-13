@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>캡처 보관함</title>
+  <link rel="stylesheet" href="fonts.css">
+  <link rel="stylesheet" href="captures.css">
+  <script src="captures.js" defer></script>
+</head>
+<body>
+<header class="bar">
+  <div class="title">
+    <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3.2"/></svg></span>
+    <div><h1>캡처 보관함</h1><p id="summary">불러오는 중…</p></div>
+  </div>
+  <div class="actions">
+    <button id="open-folder" class="ghost" title="캡처 파일이 있는 폴더를 엽니다">폴더 열기</button>
+    <button id="new-capture" class="primary" title="화면의 일부를 잘라 보관함에 담습니다">＋ 새 캡처</button>
+  </div>
+</header>
+<main id="board" tabindex="0" aria-label="캡처 목록. 화살표로 고르고 Enter 로 엽니다">
+  <div id="groups"></div>
+  <div id="empty" class="empty" hidden>
+    <div class="empty-art" aria-hidden="true"><span></span><span></span><span></span></div>
+    <strong>아직 캡처가 없습니다</strong>
+    <p>‘＋ 새 캡처’를 누르고 화면에서 담을 곳을 고르면<br>여기에 차곡차곡 쌓입니다.</p>
+  </div>
+</main>
+<footer class="hint">끌어서 다른 프로그램에 놓기 · 두 번 눌러 열기 · F2 이름 바꾸기 · Delete 휴지통으로</footer>
+<div id="menu" role="menu" hidden>
+  <button role="menuitem" data-do="open">열기</button>
+  <button role="menuitem" data-do="copy">복사</button>
+  <button role="menuitem" data-do="rename" data-one>이름 바꾸기</button>
+  <button role="menuitem" data-do="reveal" data-one>파일 위치 열기</button>
+  <hr>
+  <button role="menuitem" data-do="delete" class="danger">휴지통으로 옮기기</button>
+</div>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

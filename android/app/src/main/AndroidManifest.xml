@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 스페이스기전 교실 — 안드로이드(전자칠판)판. 상세: android/README.md -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 다른 앱(PowerPoint 등)을 열었을 때 «수업 화면으로» 떠 있는 단추 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <!-- 자동 업데이트 — 받은 새 판을 설치 창으로 -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <!-- Android 11+ 는 다른 앱이 깔려 있는지 보려면 미리 적어 둬야 한다(Programs.kt 와 같아야 한다) -->
+    <queries>
+        <package android:name="com.microsoft.office.powerpoint" />
+        <package android:name="com.microsoft.office.word" />
+        <package android:name="com.microsoft.office.excel" />
+        <package android:name="com.microsoft.office.officehubrow" />
+        <package android:name="com.hancom.office.editor" />
+        <package android:name="com.hancom.office.viewer" />
+        <package android:name="com.hancom.androidpc.viewer.launcher" />
+        <package android:name="com.microsoft.whiteboard.publicpreview" />
+        <package android:name="com.google.android.calculator" />
+        <package android:name="com.sec.android.app.popupcalculator" />
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.APP_CALCULATOR" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="*/*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+    </queries>
+
+    <application
+        android:name=".ClassroomApp"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="false"
+        android:theme="@style/Theme.Classroom"
+        android:usesCleartextTraffic="false">
+
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboard|keyboardHidden|navigation|uiMode|density"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustResize">
+            <!-- singleTask 로 두면 «수업 화면»으로 돌아올 때 위에 열린 앱 안 브라우저가 닫힌다 — singleTop + REORDER_TO_FRONT -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- «홈 화면으로 쓰기»·«칠판을 켜면 바로 실행»은 뺐다(2026-10-14 요청, 1.0.2) — 칠판의 원래 홈·시작 동작을 건드리지 않는다 -->
+
+        <!-- 앱 안 브라우저는 따로 도는 프로세스(:web) — 웹 데이터 폴더(app_webview_web)를 수업마다 바꿔 끼운다(WebVault.kt) -->
+        <activity
+            android:name=".BrowserActivity"
+            android:process=":web"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboard|keyboardHidden|navigation|uiMode|density"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- 드라이브에서 받은 파일을 다른 앱(PowerPoint·PDF 보기 등)에 넘긴다. 수업 폴더만 -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.files"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+</manifest>

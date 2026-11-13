@@ -1,0 +1,48 @@
+:root{font-family:'Pretendard Variable',Pretendard,'Malgun Gothic',system-ui,sans-serif;color:#1e293b;font-size:14px;--note:#fff176;--bar:#f0e267}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{display:flex;flex-direction:column;background:var(--note);transition:background .2s}
+button{font:inherit;cursor:pointer}
+button:disabled{cursor:wait;opacity:.5}
+:focus-visible{outline:2px solid #1e293b;outline-offset:2px}
+[hidden]{display:none!important}
+.bar{display:flex;align-items:center;gap:2px;height:34px;padding:0 4px;background:var(--bar);flex-shrink:0}
+.icon{width:30px;height:28px;border:0;border-radius:6px;background:transparent;color:#1e293b;font-size:17px;line-height:1}
+.icon:hover{background:#0000001a}
+.icon[aria-pressed="true"]{background:#00000026}
+#pin{font-size:13px;filter:grayscale(1);opacity:.6}
+#pin[aria-pressed="true"]{filter:none;opacity:1}
+.status{flex:1;font-size:11px;color:#1e293bb3;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.status.error{color:#b91c1c;font-weight:600}
+.menu{position:absolute;top:34px;left:0;right:0;z-index:2;background:#fff;box-shadow:0 8px 20px #0f172a2e;padding:10px;display:flex;flex-direction:column;gap:4px}
+.colors{display:flex;gap:6px;flex-wrap:wrap;padding:2px 2px 8px;border-bottom:1px solid #e8ebf2;margin-bottom:4px}
+.swatch{width:26px;height:26px;border-radius:50%;border:1px solid #0f172a26}
+.swatch[aria-pressed="true"]{outline:2px solid #1e293b;outline-offset:2px}
+.menu-item{border:0;background:none;text-align:left;padding:8px;border-radius:6px;font-size:13px}
+.menu-item:hover{background:#f1f5f9}
+.danger{color:#b91c1c}
+textarea{flex:1;width:100%;border:0;resize:none;background:transparent;padding:12px 14px;font:inherit;font-size:15px;line-height:1.6;color:#1e293b;outline:0}
+textarea:focus-visible{outline:0}
+textarea::placeholder{color:#1e293b80}
+.foot{font-size:10px;color:#1e293b80;padding:4px 10px 6px;flex-shrink:0}
+/* 제목 표시줄 없는 창 — 가운데 빈 곳이 끌 자리, 오른쪽 끝이 닫기 */
+.status.pywebview-drag-region{cursor:grab;align-self:stretch;display:flex;align-items:center;justify-content:center}
+.icon.close{display:grid;place-items:center}
+.icon.close svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.icon.close:hover{background:#b91c1c;color:#fff}
+.foot{display:flex;align-items:center;gap:6px}
+.foot>span:first-child{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.grip{width:14px;height:14px;flex-shrink:0;cursor:nwse-resize;margin:-4px -6px -2px 0;
+  background:linear-gradient(135deg,transparent 0 45%,#1e293b55 45% 52%,transparent 52% 64%,#1e293b55 64% 71%,transparent 71%)}
+.menu-help{margin:6px 2px 0;padding-top:8px;border-top:1px solid #e8ebf2;font-size:11px;line-height:1.6;color:#64748b}
+.menu-help b{color:#1e293b;font-weight:700}
+/* 보기 — # 제목은 크게, 웹 주소는 링크 */
+.view{flex:1;overflow:auto;padding:12px 14px;font-size:15px;line-height:1.6;color:#1e293b;cursor:text;white-space:pre-wrap;overflow-wrap:anywhere;outline:0}
+.view .ln{min-height:1.6em}
+.view .h1{font-size:22px;font-weight:800;line-height:1.35;letter-spacing:-.6px;margin:2px 0 4px}
+.view .h2{font-size:18px;font-weight:750;line-height:1.4;letter-spacing:-.4px;margin:2px 0 2px}
+.view .h3{font-size:16px;font-weight:700;line-height:1.45;margin:1px 0}
+.view .li{position:relative;padding-left:16px}
+.view .li::before{content:"";position:absolute;left:4px;top:.68em;width:5px;height:5px;border-radius:50%;background:#1e293b}
+.view a{color:#1d4ed8;text-decoration:underline;text-underline-offset:2px;cursor:pointer;border-radius:3px}
+.view a:hover{background:#1d4ed81a}

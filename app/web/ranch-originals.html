@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>별사이 목장 · 오리지널 캐릭터</title>
+<link rel="stylesheet" href="fonts.css">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f6f2e9;color:#373442;font-family:Pretendard,system-ui,sans-serif}
+main{max-width:1240px;margin:auto;padding:36px 32px}header{display:flex;justify-content:space-between;align-items:end;gap:20px}
+small{font-size:11px;letter-spacing:.14em;color:#717d68}h1{font-size:32px;letter-spacing:-1.2px;margin:10px 0 12px}
+p{font-size:14px;line-height:1.7;color:#716c75;margin:0}.count{white-space:nowrap;font-size:13px;padding:10px 14px;background:#e5eadc;border-radius:20px}
+nav{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:28px 0 22px;padding:14px 18px;border:1px solid #ded9cd;border-radius:14px;background:#fffdf6}
+label{font-size:12px;color:#66636a;display:flex;align-items:center;gap:7px}select,button{font:inherit;font-size:13px;color:#373442;background:white;border:1px solid #d7d2c7;border-radius:8px;padding:7px 10px}
+button{cursor:pointer}button:hover{background:#e5eadc}#grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+article{border:1px solid #ded9cd;background:#fffdf7;border-radius:15px;overflow:hidden;box-shadow:0 3px 8px #34342906}
+.art{background:#e6eee2;line-height:0}canvas{width:100%;height:auto;image-rendering:pixelated}
+.info{padding:16px 18px}h2{font-size:17px;margin:0 0 5px}.info p{font-size:12px}.links{display:flex;gap:10px;margin-top:12px}a{font-size:11px;color:#697c58;text-decoration:none}a:hover{text-decoration:underline}
+footer{display:flex;justify-content:space-between;gap:24px;margin-top:24px;padding-top:18px;border-top:1px solid #ded9cd;color:#827b82;font-size:12px;line-height:1.7}
+.error{color:#a33}@media(max-width:960px){#grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){main{padding:22px 16px}header{display:block}.count{display:inline-block;margin-top:10px}#grid{grid-template-columns:1fr}footer{display:block}}
+</style>
+<script src="ranch-data.js"></script><script src="ranch/sprites/atlas.js"></script>
+<script src="ranch/originals/atlas.js"></script>
+<script src="ranch/environment/atlas.js"></script>
+</head>
+<body><main>
+<header><div><small>BYEOLSAI PASTURE · ORIGINAL CHARACTERS</small><h1>틈에서 만난 여덟 친구</h1>
+<p>작은 화면에서도 알아볼 수 있는 귀와 꼬리, 조용한 몸짓.<br>성체와 아기가 같은 세계 안에서 함께 자랍니다.</p></div><span class="count">8종 · 2성장 단계 · 288프레임</span></header>
+<nav aria-label="캐릭터 미리보기 조절">
+<label>동작 <select id="action"><option value="idle_0">가만히 · 눈깜빡임</option><option value="move">걷기</option><option value="eat">먹기</option><option value="sleep_loop">잠자기</option><option value="interact_0">쓰다듬기 반응</option><option value="idle_1_loop">앉아 쉬기</option></select></label>
+<label>성장 <select id="stage"><option value="both">성체와 아기</option><option value="adult">성체</option><option value="baby">아기</option></select></label>
+<label>배경 <select id="bg"><option value="meadow">달씨앗 풀밭</option><option value="academy">아카데미 언덕</option><option value="drowned">물빛 물가</option><option value="isekai">이세계 퇴근길</option><option value="none">단색</option></select></label>
+<button id="direction">← 방향 바꾸기</button><button id="pause" aria-pressed="false">일시 정지</button>
+</nav>
+<div id="grid"></div><p id="status" role="status"></p>
+<footer><span>왼쪽은 성체, 오른쪽은 아기입니다. 동작과 배경을 바꾸며 확인해 보세요.<br>품질별 테두리·말풍선·수령 효과는 실제 목장에서 함께 표시됩니다.</span>
+<span>원화: 내장 imagegen · 게임용 픽셀 정리: 자동 컴파일<br><a href="../../docs/ranch-art/CHARACTER-GUIDE.md">캐릭터 제작 가이드 ↗</a></span></footer>
+</main>
+<script>
+'use strict';
+const atlas=window.RANCH_ATLAS, controls=Object.fromEntries(['action','stage','bg','direction','pause','status'].map(k=>[k,document.getElementById(k)]));
+const chars=window.RANCH_DATA.SPECIES.filter(s=>atlas.sheets[s.sheet]?.original);
+const pictures=new Map(), cards=[]; let paused=false, reverse=false, time=0, last=0;
+async function picture(src){if(!pictures.has(src))pictures.set(src,new Promise((resolve,reject)=>{const i=new Image();i.onload=()=>resolve(i);i.onerror=()=>reject(new Error('이미지를 읽지 못했어요: '+src));i.src=src;}));return pictures.get(src);}
+async function start(){
+ for(const sp of chars){
+  const card=document.createElement('article');
+  card.innerHTML=`<div class="art"><canvas width="280" height="200" aria-label="${sp.name} 동작 미리보기"></canvas></div><div class="info"><h2>${sp.name}</h2><p>${sp.origin}</p><div class="links"><a href="ranch/originals/${sp.id}-v2-source.png" target="_blank">원화 시트 ↗</a><a href="ranch/originals/${sp.id}_adult.webp" target="_blank">성체 스프라이트 ↗</a></div></div>`;
+  document.getElementById('grid').append(card);
+  const meta=[atlas.sheets[sp.sheet],atlas.sheets[sp.babySheet]];
+  cards.push({sp,meta,images:await Promise.all(meta.map(m=>picture(m.src))),ctx:card.querySelector('canvas').getContext('2d')});
+ }
+ for(const id of ['meadow','tp1','tp4']){const s=atlas.sheets['bg_'+id];if(s)try{await picture(s.src||`ranch/sprites/bg_${id}.png`);}catch{}}
+ window.originalPreviewReady=true;requestAnimationFrame(tick);
+}
+function tick(now){if(!paused)time+=Math.min(100,now-(last||now));last=now;render();requestAnimationFrame(tick);}
+async function render(){
+ const bg=controls.bg.value, bmeta=atlas.bgs[bg], bsheet=atlas.sheets['bg_'+bg];
+ const bgimg=bsheet ? await pictures.get(bsheet.src||`ranch/sprites/bg_${bg}.png`)?.catch(()=>null) : null;
+ for(const {ctx,meta,images} of cards){
+  ctx.clearRect(0,0,280,200);ctx.imageSmoothingEnabled=false;ctx.fillStyle=bg==='isekai'?'#262a42':'#e6eee2';ctx.fillRect(0,0,280,200);
+  if(bmeta&&bgimg){for(const layer of bmeta.layers){const scale=Math.min(2,104/layer.h),w=layer.w*scale;ctx.drawImage(bgimg,0,layer.y,layer.w,layer.h,0,200-layer.h*scale,w,layer.h*scale);}}
+  else{ctx.fillStyle=bg==='isekai'?'#414953':'#b7c99d';ctx.fillRect(0,176,280,24);}
+  const stage=controls.stage.value, indices=stage==='both'?[0,1]:[stage==='adult'?0:1];
+  for(const i of indices){const m=meta[i],c=m.clips[controls.action.value],t=(time/1000)%c.duration;let k=0;while(k+1<c.times.length&&c.times[k+1]<=t)k++;
+   const f=c.frames[k],[cw,ch]=m.cell,scale=4/(m.pixelRatio||1),x=indices.length===2?(i?206:84):140;
+   ctx.save();ctx.translate(x,176);if(reverse !== (m.frameFlip?.includes(f) ? !m.flip : m.flip))ctx.scale(-1,1);ctx.drawImage(images[i],f%m.columns*cw,Math.floor(f/m.columns)*ch,cw,ch,-m.anchor[0]*scale,-m.anchor[1]*scale,cw*scale,ch*scale);ctx.restore();
+  }
+ }
+}
+controls.pause.onclick=()=>{paused=!paused;controls.pause.textContent=paused?'계속 재생':'일시 정지';controls.pause.setAttribute('aria-pressed',String(paused));};
+controls.direction.onclick=()=>{reverse=!reverse;controls.direction.textContent=reverse?'→ 방향 바꾸기':'← 방향 바꾸기';};
+controls.action.onchange=()=>{time=0;};
+start().catch(e=>{controls.status.className='error';controls.status.textContent=e.message;});
+</script></body></html>

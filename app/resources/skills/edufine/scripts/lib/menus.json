@@ -1,0 +1,170 @@
+[
+ {
+  "이름": "공용서식",
+  "menuId": "A00AAB0101001",
+  "그룹": "기안",
+  "경로": "bms/cz/cb/wrt/retrieveCmmnFormatList.do"
+ },
+ {
+  "이름": "샘플서식",
+  "menuId": "A00AAB0101002",
+  "그룹": "기안",
+  "경로": "bms/cz/cb/wrt/retrieveStleFormatList.do"
+ },
+ {
+  "이름": "임시저장",
+  "menuId": "A00AAB0101004",
+  "그룹": "기안",
+  "경로": "bms/cz/cb/viw/retrieveTmprCstdyDocList.do"
+ },
+ {
+  "이름": "결재대기",
+  "menuId": "A00AAB0102001",
+  "그룹": "결재",
+  "경로": "bms/cz/cb/viw/retrieveSanctnWaitDocList.do"
+ },
+ {
+  "이름": "문서진행",
+  "menuId": "A00AAB0102002",
+  "그룹": "결재",
+  "경로": "bms/cz/cb/viw/retrieveSanctnProgrsDocList.do"
+ },
+ {
+  "이름": "결재예정문서",
+  "menuId": "A00AAB0102003",
+  "그룹": "결재",
+  "경로": "bms/cz/cb/viw/retrieveSanctnProgrsDocListPre.do"
+ },
+ {
+  "이름": "공람대기",
+  "menuId": "A00AAB0103001",
+  "그룹": "공람",
+  "경로": "bms/cz/cb/viw/retrieveCnrsWaitDocList.do"
+ },
+ {
+  "이름": "공람완료",
+  "menuId": "A00AAB0103002",
+  "그룹": "공람",
+  "경로": "bms/cz/cb/viw/retrieveCnrsComptDocList.do"
+ },
+ {
+  "이름": "공람지정",
+  "menuId": "A00AAB0103003",
+  "그룹": "공람",
+  "경로": "bms/cz/cb/viw/retrieveCnrsAppnDocList.do"
+ },
+ {
+  "이름": "공람이력",
+  "menuId": "A00AAB0103004",
+  "그룹": "공람",
+  "경로": "bms/cz/cb/edt/retrieveCnrsDocHistList.do"
+ },
+ {
+  "이름": "발송대기",
+  "menuId": "A00AAB0104001",
+  "그룹": "발송함",
+  "경로": "bms/cz/cb/viw/retrieveSndngWaitDocList.do"
+ },
+ {
+  "이름": "발송현황",
+  "menuId": "A00AAB0104003",
+  "그룹": "발송함",
+  "경로": "bms/cz/cb/viw/retrieveSndngSttusDocList.do"
+ },
+ {
+  "이름": "발송변경요청",
+  "menuId": "A00AAB0104004",
+  "그룹": "발송함",
+  "경로": "bms/cz/cb/viw/retrieveSndngChangeForNtt.do"
+ },
+ {
+  "이름": "업무담당확인",
+  "menuId": "A00AAB0105003",
+  "그룹": "접수함",
+  "경로": "bms/cz/cb/viw/retrieveJobChrgCnfirmDocList.do"
+ },
+ {
+  "이름": "기안한문서",
+  "menuId": "A00AAB0106001",
+  "그룹": "내문서함",
+  "경로": "bms/cz/cb/viw/retrieveDrftComptDocList.do"
+ },
+ {
+  "이름": "결재한문서",
+  "menuId": "A00AAB0106002",
+  "그룹": "내문서함",
+  "경로": "bms/cz/cb/viw/retrieveSanctnComptDocList.do"
+ },
+ {
+  "이름": "접수한문서",
+  "menuId": "A00AAB0106003",
+  "그룹": "내문서함",
+  "경로": "bms/cz/cb/viw/retrieveRceptComptDocList.do"
+ },
+ {
+  "이름": "연계기안한문서",
+  "menuId": "A00AAB0106004",
+  "그룹": "내문서함",
+  "경로": "bms/cz/cb/viw/retrieveCntcDrftComptDocList.do"
+ },
+ {
+  "이름": "부재중문서",
+  "menuId": "A00AAB0106005",
+  "그룹": "내문서함",
+  "경로": "bms/cz/cb/viw/retrieveAbsenCmpDocList.do"
+ },
+ {
+  "이름": "보안공유받은문서",
+  "menuId": "A00AAB0106006",
+  "그룹": "내문서함",
+  "경로": "bms/cz/cb/viw/retrieveReadngLmttDocList.do"
+ },
+ {
+  "이름": "공개예정문서",
+  "menuId": "A00AAB0106007",
+  "그룹": "내문서함",
+  "경로": "bms/cz/cb/viw/retrieveDocOthbcCnvrsDteList.do"
+ },
+ {
+  "이름": "문서등록대장",
+  "menuId": "A00AAB0107001",
+  "그룹": "문서함",
+  "경로": "bms/cz/cb/dbx/retrieveDocRegistRegstrList.do"
+ },
+ {
+  "이름": "문서등록대장(다년도검색)",
+  "menuId": "A00AAB0107012",
+  "그룹": "문서함",
+  "경로": "bms/cz/cb/dbx/searchRetrieveDocRegistRegstrList.do"
+ },
+ {
+  "이름": "부서인수문서",
+  "menuId": "A00AAB0107006",
+  "그룹": "문서함",
+  "경로": "bms/cz/cb/dbx/retrieveUndtakeDbxList.do"
+ },
+ {
+  "이름": "원문공개된문서",
+  "menuId": "A00AAB0107009",
+  "그룹": "문서함",
+  "경로": "bms/cz/cb/viw/retrieveOpenPubDocList.do"
+ },
+ {
+  "이름": "공동기안문서대장",
+  "menuId": "A00AAB0107010",
+  "그룹": "문서함",
+  "경로": "bms/cz/cb/viw/retrieveCoDraftDocList.do"
+ },
+ {
+  "이름": "보안공유지정이력",
+  "menuId": "A00AAB0108006",
+  "그룹": "김예준황",
+  "경로": "bms/cz/cb/edt/retrieveReadngLmttDocAppnHistList.do"
+ },
+ {
+  "이름": "보안공유열람이력",
+  "menuId": "A00AAB0108007",
+  "그룹": "김예준황",
+  "경로": "bms/cz/cb/edt/retrieveReadngLmttDocAccessHistList.do"
+ }
+]

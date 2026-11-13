@@ -1,0 +1,75 @@
+/* 스페이스기전 교실 — 독 위에 따로 뜨는 작은 창(알림 · 확인 · 구글). 독(높이 112)에 그리면 잘려서 창으로 뺐다. */
+:root{--bg:#ffffff;--ink:#1e293b;--muted:#64748b;--line:#e3e7f0;--hover:#f1f3f9;--brand:#4f46e5;--danger:#b4232a;--ok:#15803d;
+  font-family:'Pretendard Variable',Pretendard,'Malgun Gothic',system-ui,sans-serif;color:var(--ink);background:var(--bg);font-size:14px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1f2330;--ink:#e6e9f2;--muted:#9aa3b8;--line:#323a4d;--hover:#2a3042;
+  --brand:#a5b4fc;--danger:#f87171;--ok:#4ade80}}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);overflow:hidden}
+button{font:inherit;cursor:pointer;color:inherit}
+button:focus-visible{outline:3px solid #a5b4fc;outline-offset:2px}
+[hidden]{display:none!important}h1,p{margin:0}
+
+/* 알림 */
+.toast{height:100%;display:flex;align-items:center;gap:14px;padding:14px 16px 14px 20px;border-left:5px solid var(--brand)}
+.toast.error{border-left-color:var(--danger)}
+.toast p{flex:1;font-size:14px;line-height:1.55;overflow-wrap:anywhere;max-height:100%;overflow:auto}
+.x{border:0;background:transparent;font-size:18px;color:var(--muted);width:30px;height:30px;border-radius:8px;flex-shrink:0}
+.x:hover{background:var(--hover)}
+
+/* 확인 */
+.dialog{height:100%;display:flex;flex-direction:column;gap:12px;padding:22px 24px}
+.dialog h1{font-size:18px;letter-spacing:-.3px}
+.dialog p{flex:1;color:var(--muted);line-height:1.65;white-space:pre-line;overflow:auto}
+.row{display:flex;justify-content:flex-end;gap:8px}
+.btn{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:9px 18px;font-weight:600}
+.btn:hover{background:var(--hover)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.danger{background:var(--danger);border-color:var(--danger);color:#fff}
+
+/* 구글 */
+.google{height:100%;display:flex;flex-direction:column}
+.google header{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.google header .g{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-weight:800;font-size:18px;
+  background:#fff url(icons/google/google.png) center/80% no-repeat;color:transparent;border:1px solid var(--line)}
+.google header div{flex:1;min-width:0}
+.google header strong{display:block;font-size:15px}
+.google header span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.apps{flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:14px;align-content:start;overflow:auto}
+.app{display:flex;flex-direction:column;align-items:center;gap:7px;border:0;background:transparent;border-radius:12px;padding:12px 4px}
+.app:hover{background:var(--hover)}
+.app .ic{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:17px;color:#fff}
+.app span:last-child{font-size:12px}
+.app .ic img{width:100%;height:100%;object-fit:contain}
+.google footer{display:flex;align-items:center;gap:8px;padding:12px 16px;border-top:1px solid var(--line)}
+.google footer p{flex:1;font-size:12px;color:var(--muted);line-height:1.5}
+.google footer{flex-wrap:wrap}
+.google footer .g-status{flex:1 0 100%;margin:0 0 2px;padding:7px 10px;border-radius:8px;font-size:13px;font-weight:600;color:var(--text,#1f2937);background:#f1f5f9}
+.google footer .g-status.ok{color:#166534;background:#dcfce7}
+.google footer .g-status.warn{color:#9a3412;background:#ffedd5}
+.link{border:0;background:transparent;color:var(--danger);font-size:12px;padding:6px 8px;border-radius:8px}
+.link:hover{background:var(--hover)}
+
+/* 구글 창 — 로그인 없이 바로(구글 수업 도구) */
+.tools{padding:12px 14px 0}
+.tools-label{font-size:12px;font-weight:700;color:var(--muted);margin:2px 4px 8px}
+.tools-label small{font-weight:400}
+.tools-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.tool{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 12px;min-height:52px;font-weight:700;font-size:13px}
+.tool:hover{background:var(--hover)}
+.tool img{width:28px;height:28px;object-fit:contain}
+.google .apps{padding-top:0}
+
+/* 휴대폰으로 구글 로그인 */
+.type{height:100%;display:flex;flex-direction:column}
+.type header{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.type header .g{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-weight:800;font-size:18px;
+  background:#fff url(icons/google/google.png) center/80% no-repeat;color:transparent;border:1px solid var(--line)}
+.type header div{flex:1;min-width:0}
+.type header strong{display:block;font-size:15px}
+.type header span{display:block;font-size:12px;color:var(--muted)}
+.type-body{flex:1;overflow:auto;padding:18px 22px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.type-qr{width:240px;height:240px;background:#fff;border-radius:12px;padding:6px;border:1px solid var(--line)}
+.type-qr svg{width:100%;height:100%;display:block}
+.type-status{font-weight:700;text-align:center;line-height:1.5}
+.type-status.ok{color:var(--ok)}.type-status.err{color:var(--danger)}
+.type-steps{margin:0;padding-left:20px;font-size:13px;line-height:1.75;color:var(--ink);align-self:stretch}
+.type-safe{font-size:12px;color:var(--muted);line-height:1.6;align-self:stretch}

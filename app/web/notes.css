@@ -1,0 +1,7 @@
+.note-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;padding:20px 22px}
+.note-grid .empty{grid-column:1/-1}
+.note-card{display:flex;flex-direction:column;gap:10px;min-height:150px;border:1px solid #0f172a14;border-radius:12px;padding:14px 16px;text-align:left;color:#1e293b;box-shadow:0 2px 6px #0f172a0f}
+.note-card:hover{box-shadow:0 6px 16px #0f172a1f;transform:translateY(-1px)}
+.note-card p{flex:1;color:#1e293b;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-word;display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}
+.note-card p.blank{color:#1e293b80}
+.note-card time{font-size:11px;color:#1e293b99}

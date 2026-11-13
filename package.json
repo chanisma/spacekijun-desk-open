@@ -1,0 +1,26 @@
+{
+  "name": "neis_helper",
+  "version": "1.0.0",
+  "main": "test_js_preprocessor.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "check": "tsc -p app/guide-src/tsconfig.json",
+    "build:guide": "node scripts/build-guide.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "SEE LICENSE IN LICENSE",
+  "description": "",
+  "dependencies": {
+    "playwright": "^1.58.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "esbuild": "^0.21.5",
+    "typescript": "^5.5.4"
+  }
+}

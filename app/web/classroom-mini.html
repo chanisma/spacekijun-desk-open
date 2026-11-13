@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>스페이스기전 교실</title>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="classroom-mini.css">
+</head>
+<body>
+<!-- QR 창을 내리면 바탕화면 오른쪽 아래에 뜨는 작은 위젯 — 여기 QR 로도 바로 연결된다 -->
+<main class="mini">
+  <div id="qr" class="qr" role="img" aria-label="연결 QR 코드"></div>
+  <div class="body">
+    <div class="brand"><span class="mark">S</span>스페이스기전 교실</div>
+    <strong id="device" class="device"></strong>
+    <p id="line" class="line"></p>
+    <button id="open" class="open" type="button">QR 크게 보기</button>
+  </div>
+</main>
+<script src="classroom-mini.js"></script>
+</body>
+</html>

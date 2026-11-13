@@ -1,0 +1,2105 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEIS Scraper</title>
+    <style>
+        :root {
+            /* Color System */
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --primary-light: #eef2ff;
+
+            --success: #10b981;
+            --success-hover: #059669;
+            --success-light: #d1fae5;
+
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --danger-light: #fee2e2;
+
+            --warning: #f59e0b;
+            --warning-hover: #d97706;
+            --warning-light: #fef3c7;
+
+            --info: #3b82f6;
+            --info-hover: #2563eb;
+            --info-light: #dbeafe;
+
+            --accent: #8b5cf6;
+            --accent-hover: #7c3aed;
+            --accent-light: #ede9fe;
+
+            /* Neutral Colors */
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+
+            --border: #e2e8f0;
+            --border-focus: #cbd5e1;
+
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 12px;
+            --space-lg: 16px;
+            --space-xl: 20px;
+            --space-2xl: 24px;
+
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-full: 9999px;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-base: 200ms ease;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-width: 300px;
+            max-width: 100%;
+            padding: var(--space-lg);
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 13px;
+            line-height: 1.5;
+            margin: 0;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        /* Skip Link for Accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary);
+            color: white;
+            padding: var(--space-sm) var(--space-md);
+            z-index: 100;
+            border-radius: var(--radius-sm);
+        }
+
+        .skip-link:focus {
+            top: var(--space-sm);
+            left: var(--space-sm);
+        }
+
+        /* Focus Styles for Accessibility */
+        :focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .header-text h1 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .header-text p {
+            margin: 0;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* Status Badge */
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-md);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: var(--radius-full);
+            background: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .status-indicator.active {
+            background: var(--success);
+            animation: pulse 1.5s infinite;
+        }
+
+        .status-indicator.error {
+            background: var(--danger);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .status-text {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            flex: 1;
+        }
+
+        .status-text span {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-bottom: var(--space-md);
+            display: none;
+        }
+
+        .progress-container.visible {
+            display: block;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-xs);
+        }
+
+        .progress-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .progress-stats {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: var(--radius-full);
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-detail {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: var(--space-xs);
+            text-align: center;
+        }
+
+        /* Card Container */
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow var(--transition-base);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .card-title::before {
+            content: '';
+            width: 3px;
+            height: 14px;
+            background: var(--primary);
+            border-radius: var(--radius-full);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: var(--space-xs);
+        }
+
+        .quick-btn {
+            padding: var(--space-xs) var(--space-sm);
+            font-size: 10px;
+            font-weight: 500;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            flex: none;
+        }
+
+        .quick-btn:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .quick-btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 1px;
+        }
+
+        /* Preset Chips */
+        .preset-container {
+            margin-bottom: var(--space-md);
+        }
+
+        .preset-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: block;
+        }
+
+        .preset-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-xs);
+        }
+
+        .preset-chip {
+            padding: var(--space-xs) var(--space-md);
+            font-size: 11px;
+            font-weight: 500;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-full);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            flex: none;
+        }
+
+        .preset-chip:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .preset-chip.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* Input Groups */
+        .input-group {
+            margin-bottom: var(--space-md);
+        }
+
+        .input-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .input-row .separator {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Select Dropdown */
+        select {
+            padding: var(--space-sm) var(--space-md);
+            padding-right: 28px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-family: inherit;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: all var(--transition-fast);
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            min-width: 70px;
+        }
+
+        select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        select:hover {
+            border-color: var(--border-focus);
+        }
+
+        input[type="date"] {
+            padding: var(--space-sm) var(--space-md);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-family: inherit;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: all var(--transition-fast);
+            outline: none;
+        }
+
+        input[type="date"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            padding: var(--space-sm) var(--space-md);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-family: inherit;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: all var(--transition-fast);
+            outline: none;
+        }
+
+        input[type="number"]:focus,
+        input[type="text"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        input[type="number"] {
+            width: 60px;
+            text-align: center;
+        }
+
+        input.full-width {
+            width: 100%;
+        }
+
+        /* Range Summary */
+        .range-summary {
+            margin-top: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--info-light);
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            color: var(--info-hover);
+            text-align: center;
+        }
+
+        /* Checkbox Grid */
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-xs);
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            user-select: none;
+            border: 1px solid transparent;
+        }
+
+        .checkbox-item:hover {
+            background: var(--primary-light);
+        }
+
+        .checkbox-item:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            accent-color: var(--primary);
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .checkbox-item span {
+            font-size: 11px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .checkbox-item:has(input:checked) {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        .checkbox-item:has(input:checked) span {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* Selection Count Badge */
+        .selection-badge {
+            font-size: 10px;
+            background: var(--primary);
+            color: white;
+            padding: 2px 6px;
+            border-radius: var(--radius-full);
+            margin-left: auto;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+
+        button {
+            flex: 1;
+            padding: var(--space-md) var(--space-lg);
+            font-size: 12px;
+            font-weight: 600;
+            font-family: inherit;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+
+        button:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: var(--success-hover);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: var(--danger-hover);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-info {
+            background: var(--info);
+            color: white;
+        }
+
+        .btn-info:hover:not(:disabled) {
+            background: var(--info-hover);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-accent:hover:not(:disabled) {
+            background: var(--accent-hover);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:hover:not(:disabled) {
+            background: var(--warning-hover);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            margin: var(--space-lg) 0;
+        }
+
+        /* Preprocess Section */
+        .preprocess-section {
+            background: linear-gradient(135deg, var(--accent-light), var(--primary-light));
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+        }
+
+        .preprocess-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-sm);
+        }
+
+        .preprocess-header h4 {
+            margin: 0;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-hover);
+        }
+
+        .preprocess-desc {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin: 0 0 var(--space-md) 0;
+            line-height: 1.6;
+        }
+
+        #selectedFiles {
+            font-size: 11px;
+            color: var(--text-primary);
+            margin: var(--space-sm) 0;
+            max-height: 80px;
+            overflow-y: auto;
+            background: var(--bg-secondary);
+            padding: var(--space-md);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            display: none;
+        }
+
+        #preprocessResult {
+            font-size: 11px;
+            margin-top: var(--space-md);
+            padding: var(--space-md);
+            background: var(--success-light);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--success);
+            color: var(--success-hover);
+            display: none;
+        }
+
+        /* Preprocessing Steps Display */
+        #preprocessSteps {
+            display: none;
+            margin-top: var(--space-md);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: var(--space-md);
+            font-size: 11px;
+        }
+
+        .preprocess-steps-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 var(--space-sm) 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 5px 0;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+            transition: color 0.2s, opacity 0.2s;
+            opacity: 0.5;
+        }
+
+        .step-item:last-child {
+            border-bottom: none;
+        }
+
+        .step-item.active {
+            color: var(--info-hover);
+            opacity: 1;
+            font-weight: 500;
+        }
+
+        .step-item.done {
+            color: var(--success-hover);
+            opacity: 1;
+        }
+
+        .step-icon {
+            flex-shrink: 0;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1px;
+        }
+
+        .step-icon .pending-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--border);
+        }
+
+        .step-item.active .step-icon .pending-dot {
+            background: var(--info);
+            box-shadow: 0 0 0 3px var(--info-light);
+            animation: stepPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes stepPulse {
+            0%, 100% { box-shadow: 0 0 0 2px var(--info-light); }
+            50% { box-shadow: 0 0 0 5px var(--info-light); }
+        }
+
+        .step-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .step-label {
+            display: block;
+            line-height: 1.4;
+        }
+
+        .step-detail {
+            display: block;
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+            font-weight: 400;
+        }
+
+        .step-item.done .step-detail {
+            color: var(--success);
+        }
+
+        .step-item.done.clickable {
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            padding: 5px 4px;
+            margin: 0 -4px;
+        }
+
+        .step-item.done.clickable:hover {
+            background: var(--success-light);
+        }
+
+        .step-item.done.clickable.selected {
+            background: var(--info-light);
+            border-color: var(--info);
+        }
+
+        .step-item.done.clickable.selected .step-detail {
+            color: var(--info);
+        }
+
+        /* Step Data Preview */
+        #stepPreview {
+            display: none;
+            margin-top: var(--space-sm);
+            border: 1px solid var(--info);
+            border-radius: var(--radius-sm);
+            background: white;
+            overflow: hidden;
+        }
+
+        .preview-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 10px;
+            background: var(--info-light);
+            border-bottom: 1px solid var(--info);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--info-hover);
+        }
+
+        .preview-header-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .preview-header-actions button {
+            font-size: 10px;
+            padding: 2px 8px;
+            border: 1px solid var(--info);
+            border-radius: var(--radius-sm);
+            background: white;
+            color: var(--info-hover);
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .preview-header-actions button:hover {
+            background: var(--info);
+            color: white;
+        }
+
+        .preview-close {
+            background: none !important;
+            border: none !important;
+            font-size: 14px !important;
+            padding: 0 4px !important;
+            cursor: pointer;
+            color: var(--info-hover);
+            line-height: 1;
+        }
+
+        .preview-table-wrap {
+            max-height: 220px;
+            overflow: auto;
+        }
+
+        .preview-table {
+            width: 100%;
+            font-size: 10px;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .preview-table th {
+            position: sticky;
+            top: 0;
+            background: #f1f5f9;
+            font-weight: 600;
+            color: var(--text-primary);
+            padding: 4px 8px;
+            border-bottom: 2px solid var(--border);
+            text-align: left;
+        }
+
+        .preview-table td {
+            padding: 3px 8px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .preview-table tr:hover td {
+            background: #f8fafc;
+        }
+
+        .preview-table .row-num {
+            color: var(--border);
+            font-size: 9px;
+            text-align: right;
+            padding-right: 6px;
+            user-select: none;
+        }
+
+        .preview-info {
+            padding: 4px 10px;
+            font-size: 10px;
+            color: var(--text-secondary);
+            background: #f8fafc;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        /* Log Terminal */
+        .log-container {
+            background: #1e293b;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .log-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            background: #0f172a;
+        }
+
+        .log-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: var(--radius-full);
+        }
+
+        .log-dot.red { background: #ef4444; }
+        .log-dot.yellow { background: #eab308; }
+        .log-dot.green { background: #22c55e; }
+
+        .log-title {
+            flex: 1;
+            text-align: center;
+            font-size: 11px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .log-clear-btn {
+            background: transparent;
+            border: none;
+            color: #64748b;
+            font-size: 10px;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: var(--radius-sm);
+            flex: none;
+        }
+
+        .log-clear-btn:hover {
+            background: #334155;
+            color: #94a3b8;
+        }
+
+        #log, #attendLog, #clubLog {
+            width: 100%;
+            height: 180px;
+            font-size: 11px;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            overflow-y: auto;
+            padding: var(--space-md);
+            background: #1e293b;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        #log::-webkit-scrollbar, #attendLog::-webkit-scrollbar, #clubLog::-webkit-scrollbar, #ttLog::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #log::-webkit-scrollbar-track, #attendLog::-webkit-scrollbar-track, #clubLog::-webkit-scrollbar-track, #ttLog::-webkit-scrollbar-track {
+            background: #334155;
+            border-radius: 3px;
+        }
+
+        #log::-webkit-scrollbar-thumb, #attendLog::-webkit-scrollbar-thumb, #clubLog::-webkit-scrollbar-thumb, #ttLog::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 3px;
+        }
+
+        #log::-webkit-scrollbar-thumb:hover, #attendLog::-webkit-scrollbar-thumb:hover, #clubLog::-webkit-scrollbar-thumb:hover, #ttLog::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+
+        .log-entry {
+            padding: 1px 0;
+        }
+
+        .log-entry.success {
+            color: #4ade80;
+        }
+
+        .log-entry.error {
+            color: #f87171;
+        }
+
+        .log-entry.warning {
+            color: #fbbf24;
+        }
+
+        /* Report Summary */
+        .report-summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+
+        .report-badge {
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-full);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .report-badge.success {
+            background: var(--success-light);
+            color: var(--success-hover);
+        }
+
+        .report-badge.warning {
+            background: var(--warning-light);
+            color: var(--warning-hover);
+        }
+
+        .report-badge.info {
+            background: var(--info-light);
+            color: var(--info-hover);
+        }
+
+        .report-badge.error {
+            background: var(--danger-light);
+            color: var(--danger-hover);
+        }
+
+        .report-table {
+            width: 100%;
+            font-size: 11px;
+            border-collapse: collapse;
+            margin-top: var(--space-sm);
+        }
+
+        .report-table th {
+            background: var(--bg-tertiary);
+            font-weight: 600;
+            color: var(--text-primary);
+            padding: var(--space-xs) var(--space-sm);
+            border-bottom: 2px solid var(--border);
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .report-table td {
+            padding: var(--space-xs) var(--space-sm);
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .report-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: var(--space-md) 0 var(--space-xs) 0;
+        }
+
+        /* Hidden file input */
+        input[type="file"] {
+            display: none;
+        }
+
+        /* Screen Reader Only */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 320px) {
+            .checkbox-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .quick-actions {
+                flex-direction: column;
+            }
+        }
+
+        /* Keyboard Navigation Indicator */
+        [data-focus-visible-added] {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Club Task Tabs */
+        .club-tabs {
+            display: flex;
+            gap: 2px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            padding: 2px;
+            margin-bottom: var(--space-md);
+            overflow-x: auto;
+        }
+
+        .club-tab {
+            flex: 1;
+            padding: var(--space-xs) var(--space-sm);
+            border: none;
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+            min-width: 0;
+        }
+
+        .club-tab:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .club-tab.active {
+            background: var(--bg-secondary);
+            color: var(--primary);
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .club-task-config { display: none; }
+        .club-task-config.active { display: block; }
+
+        .club-flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        .club-flow > button,
+        .club-flow > .btn-group {
+            width: 100%;
+        }
+
+        .club-flow-arrow {
+            display: flex;
+            justify-content: center;
+            padding: 4px 0;
+        }
+
+        /* Page System */
+        [data-page] { display: none; }
+        [data-page].active { display: block; animation: fadeIn 0.2s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Menu Cards */
+        .menu-card {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-lg);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-md);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .menu-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .menu-card:active {
+            transform: translateY(0);
+        }
+
+        .menu-card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .menu-card-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-light);
+            border-radius: var(--radius-md);
+        }
+
+        .menu-card.disabled .menu-card-icon {
+            background: var(--bg-tertiary);
+        }
+
+        .menu-card-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .menu-card-content h3 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .menu-card-content p {
+            margin: 2px 0 0;
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .menu-card-arrow {
+            flex-shrink: 0;
+            color: var(--text-muted);
+            transition: transform var(--transition-fast);
+        }
+
+        .menu-card:hover .menu-card-arrow {
+            transform: translateX(2px);
+            color: var(--primary);
+        }
+
+        /* Page Header with Back Button */
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: var(--space-xs) var(--space-sm);
+            font-size: 12px;
+            font-weight: 500;
+            font-family: inherit;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            flex: none;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .page-header h2 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Skip Link for Accessibility -->
+    <a href="#main-content" class="skip-link">메인 콘텐츠로 이동</a>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <div class="header-icon" aria-hidden="true">N</div>
+        <div class="header-text">
+            <h1>NEIS Scraper</h1>
+            <p>학생 데이터 수집 도구</p>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <!-- Home Page (Main Menu) -->
+        <div data-page="home" class="page active">
+            <div class="menu-card" data-target="scraper">
+                <div class="menu-card-icon">📋</div>
+                <div class="menu-card-content">
+                    <h3>생활기록부 다운로드</h3>
+                    <p>NEIS에서 학생 데이터를 자동 수집하고 Excel 전처리</p>
+                </div>
+                <svg class="menu-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </div>
+
+            <div class="menu-card" data-target="timetable">
+                <div class="menu-card-icon">🕐</div>
+                <div class="menu-card-content">
+                    <h3>학생별 시간표 추출</h3>
+                    <p>학생별 시간표를 일괄 다운로드합니다</p>
+                </div>
+                <svg class="menu-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </div>
+
+            <div class="menu-card" data-target="attendance">
+                <div class="menu-card-icon">📝</div>
+                <div class="menu-card-content">
+                    <h3>과목별 출결 비고 관리</h3>
+                    <p>출석인정 학생의 비고란을 자동으로 작성</p>
+                </div>
+                <svg class="menu-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </div>
+
+            <div class="menu-card" data-target="club">
+                <div class="menu-card-icon">🎭</div>
+                <div class="menu-card-content">
+                    <h3>동아리 활동 관리</h3>
+                    <p>이수시간등록, 출결, 누가기록, 이수시간반영 자동화</p>
+                </div>
+                <svg class="menu-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Scraper Page -->
+        <div data-page="scraper" class="page">
+            <div class="page-header">
+                <button class="back-btn" data-target="home">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                    메인 메뉴
+                </button>
+                <h2>생활기록부 다운로드</h2>
+            </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar" role="status" aria-live="polite" aria-label="현재 상태">
+            <div class="status-indicator" id="statusIndicator" aria-hidden="true"></div>
+            <div class="status-text">상태: <span id="status">대기중</span></div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container" id="progressContainer" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="스크래핑 진행률">
+            <div class="progress-header">
+                <span class="progress-label" id="progressLabel">진행 중...</span>
+                <span class="progress-stats" id="progressStats">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div class="progress-detail" id="progressDetail"></div>
+        </div>
+
+        <!-- Range Settings Card -->
+        <section class="card" aria-labelledby="range-title">
+            <h2 class="card-title" id="range-title">범위 설정</h2>
+
+            <!-- Preset Chips -->
+            <div class="preset-container">
+                <span class="preset-label">빠른 선택</span>
+                <div class="preset-chips" role="group" aria-label="빠른 범위 선택">
+                    <button type="button" class="preset-chip" data-preset="grade1" aria-label="1학년 전체">1학년</button>
+                    <button type="button" class="preset-chip" data-preset="grade2" aria-label="2학년 전체">2학년</button>
+                    <button type="button" class="preset-chip" data-preset="grade3" aria-label="3학년 전체">3학년</button>
+                    <button type="button" class="preset-chip" data-preset="all" aria-label="전교생">전교생</button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">학년 범위</label>
+                <div class="input-row">
+                    <select id="gradeStart" aria-label="시작 학년">
+                        <option value="1">1학년</option>
+                        <option value="2">2학년</option>
+                        <option value="3">3학년</option>
+                    </select>
+                    <span class="separator" aria-hidden="true">~</span>
+                    <select id="gradeEnd" aria-label="끝 학년">
+                        <option value="1">1학년</option>
+                        <option value="2">2학년</option>
+                        <option value="3" selected>3학년</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">반 범위</label>
+                <div class="input-row">
+                    <select id="classStart" aria-label="시작 반">
+                        <option value="1">1반</option>
+                        <option value="2">2반</option>
+                        <option value="3">3반</option>
+                        <option value="4">4반</option>
+                        <option value="5">5반</option>
+                        <option value="6">6반</option>
+                        <option value="7">7반</option>
+                        <option value="8">8반</option>
+                        <option value="9">9반</option>
+                    </select>
+                    <span class="separator" aria-hidden="true">~</span>
+                    <select id="classEnd" aria-label="끝 반">
+                        <option value="1">1반</option>
+                        <option value="2">2반</option>
+                        <option value="3">3반</option>
+                        <option value="4">4반</option>
+                        <option value="5">5반</option>
+                        <option value="6">6반</option>
+                        <option value="7">7반</option>
+                        <option value="8">8반</option>
+                        <option value="9" selected>9반</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Range Summary -->
+            <div class="range-summary" id="rangeSummary" aria-live="polite">
+                1~3학년, 1~9반 (총 27개 반)
+            </div>
+
+            <div class="input-group">
+                <label class="input-label" for="delay">딜레이 (ms)</label>
+                <input type="number" id="delay" value="2000" class="full-width" min="500" step="100" aria-describedby="delay-desc">
+                <span id="delay-desc" class="sr-only">각 요청 사이의 대기 시간 (밀리초)</span>
+            </div>
+        </section>
+
+        <!-- Target Sections Card -->
+        <section class="card" aria-labelledby="sections-title">
+            <div class="card-header">
+                <h2 class="card-title" id="sections-title">
+                    수집 항목
+                    <span class="selection-badge" id="selectionBadge" aria-live="polite">9개 선택</span>
+                </h2>
+                <div class="quick-actions" role="group" aria-label="빠른 선택">
+                    <button type="button" class="quick-btn" id="selectAllBtn" aria-label="모든 항목 선택">전체</button>
+                    <button type="button" class="quick-btn" id="deselectAllBtn" aria-label="모든 항목 해제">해제</button>
+                </div>
+            </div>
+            <fieldset id="sections" class="checkbox-grid" role="group" aria-label="수집할 데이터 항목 선택">
+                <legend class="sr-only">수집할 항목을 선택하세요</legend>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="hakjeok" checked aria-label="인적/학적 사항">
+                    <span>인적/학적</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="history" checked aria-label="학년반 이력">
+                    <span>학년반이력</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="attend" checked aria-label="출결 상황">
+                    <span>출결상황</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="volunteer" checked aria-label="봉사활동 상황">
+                    <span>봉사활동</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="creative" checked aria-label="창의적 체험활동">
+                    <span>창의적체험</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="subject" checked aria-label="교과 학습 발달상황">
+                    <span>교과학습</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="sewteuk" checked aria-label="세부능력 및 특기사항">
+                    <span>세특</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="reading" checked aria-label="독서활동 상황">
+                    <span>독서활동</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="behavior" checked aria-label="행동특성 및 종합의견">
+                    <span>행동특성</span>
+                </label>
+            </fieldset>
+        </section>
+
+        <!-- Navigate Button -->
+        <button id="scraperNavBtn" class="btn-info btn-full" style="margin-bottom:var(--space-sm)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+            </svg>
+            페이지 이동
+        </button>
+
+        <!-- Action Buttons -->
+        <div class="btn-group" role="group" aria-label="스크래핑 제어">
+            <button id="startBtn" class="btn-success" aria-describedby="start-desc">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                시작
+            </button>
+            <span id="start-desc" class="sr-only">데이터 수집을 시작합니다</span>
+            <button id="stopBtn" class="btn-danger" aria-describedby="stop-desc">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                </svg>
+                중지
+            </button>
+            <span id="stop-desc" class="sr-only">데이터 수집을 중지합니다</span>
+        </div>
+
+        <div class="divider" role="separator"></div>
+
+        <!-- Preprocess Section -->
+        <section id="preprocessSection" class="preprocess-section" aria-labelledby="preprocess-title">
+            <div class="preprocess-header">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+                <h3 id="preprocess-title">Excel 전처리</h3>
+            </div>
+            <p class="preprocess-desc">
+                다운로드한 세부능력및특기사항 파일을 선택하면<br>자동으로 전처리됩니다.
+            </p>
+
+            <input type="file" id="fileInput" multiple accept=".xls,.xlsx" aria-label="Excel 파일 선택">
+            <button id="selectFilesBtn" class="btn-accent btn-full">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+                파일 선택 (복수 가능)
+            </button>
+
+            <div id="selectedFiles" role="list" aria-label="선택된 파일 목록"></div>
+
+            <button id="preprocessBtn" class="btn-warning btn-full" style="display: none; margin-top: 8px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                </svg>
+                전처리 실행
+            </button>
+
+            <div id="preprocessSteps" aria-label="전처리 단계">
+                <div class="preprocess-steps-title">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="9 11 12 14 22 4"></polyline>
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                    </svg>
+                    전처리 과정
+                </div>
+                <div id="stepsList"></div>
+                <div id="stepPreview">
+                    <div class="preview-header">
+                        <span id="previewTitle">-</span>
+                        <div class="preview-header-actions">
+                            <button id="previewDownloadBtn" title="이 단계의 데이터를 Excel로 다운로드">Excel 저장</button>
+                            <button class="preview-close" id="previewCloseBtn" title="닫기">&times;</button>
+                        </div>
+                    </div>
+                    <div class="preview-table-wrap">
+                        <table class="preview-table">
+                            <thead id="previewThead"></thead>
+                            <tbody id="previewTbody"></tbody>
+                        </table>
+                    </div>
+                    <div class="preview-info" id="previewInfo"></div>
+                </div>
+            </div>
+
+            <div id="preprocessResult" role="alert" aria-live="polite"></div>
+        </section>
+
+        <!-- Log Terminal -->
+        <section class="log-container" aria-labelledby="log-title">
+            <div class="log-header">
+                <div class="log-dot red" aria-hidden="true"></div>
+                <div class="log-dot yellow" aria-hidden="true"></div>
+                <div class="log-dot green" aria-hidden="true"></div>
+                <div class="log-title" id="log-title">Console</div>
+                <button class="log-clear-btn" id="clearLogBtn" aria-label="로그 지우기">Clear</button>
+            </div>
+            <div id="log" role="log" aria-live="polite" aria-label="작업 로그"></div>
+        </section>
+        </div><!-- /data-page="scraper" -->
+
+        <!-- Attendance Page -->
+        <div data-page="timetable" class="page">
+            <div class="page-header">
+                <button class="back-btn" data-target="home">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                    메인 메뉴
+                </button>
+                <h2>학생별 시간표 추출</h2>
+            </div>
+
+            <!-- Status Bar -->
+            <div class="status-bar" role="status" aria-live="polite">
+                <div class="status-indicator" id="ttStatusIndicator" aria-hidden="true"></div>
+                <div class="status-text">상태: <span id="ttStatus">대기중</span></div>
+            </div>
+
+            <!-- 범위 설정 -->
+            <section class="card">
+                <h2 class="card-title">범위 설정</h2>
+                <div class="input-group">
+                    <label class="input-label">학년</label>
+                    <div class="range-row" style="display:flex;gap:var(--space-sm);align-items:center;">
+                        <select id="ttGradeStart" class="full-width">
+                            <option value="1">1학년</option>
+                            <option value="2">2학년</option>
+                            <option value="3">3학년</option>
+                        </select>
+                        <span>~</span>
+                        <select id="ttGradeEnd" class="full-width">
+                            <option value="1">1학년</option>
+                            <option value="2">2학년</option>
+                            <option value="3">3학년</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">반</label>
+                    <div class="range-row" style="display:flex;gap:var(--space-sm);align-items:center;">
+                        <select id="ttClassStart" class="full-width">
+                            <option value="1">1반</option>
+                            <option value="2">2반</option>
+                            <option value="3">3반</option>
+                            <option value="4">4반</option>
+                            <option value="5">5반</option>
+                            <option value="6">6반</option>
+                            <option value="7">7반</option>
+                            <option value="8">8반</option>
+                            <option value="9">9반</option>
+                        </select>
+                        <span>~</span>
+                        <select id="ttClassEnd" class="full-width">
+                            <option value="1">1반</option>
+                            <option value="2">2반</option>
+                            <option value="3">3반</option>
+                            <option value="4">4반</option>
+                            <option value="5">5반</option>
+                            <option value="6">6반</option>
+                            <option value="7">7반</option>
+                            <option value="8">8반</option>
+                            <option value="9">9반</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="range-summary" id="ttRangeSummary" style="font-size:11px;color:var(--text-muted);margin-top:var(--space-xs);"></div>
+            </section>
+
+            <!-- Navigate Button -->
+            <button id="ttNavBtn" class="btn-info btn-full" style="margin-bottom:var(--space-sm)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                </svg>
+                페이지 이동
+            </button>
+
+            <!-- Action Buttons -->
+            <div class="btn-group" role="group">
+                <button id="ttStartBtn" class="btn-success">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    시작
+                </button>
+                <button id="ttStopBtn" class="btn-danger" disabled>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    </svg>
+                    중지
+                </button>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container" id="ttProgressContainer" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                <div class="progress-header">
+                    <span class="progress-label" id="ttProgressLabel">진행 중...</span>
+                    <span class="progress-stats" id="ttProgressStats">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="ttProgressFill" style="width: 0%"></div>
+                </div>
+                <div class="progress-detail" id="ttProgressDetail"></div>
+            </div>
+
+            <!-- Log Terminal -->
+            <section class="log-container">
+                <div class="log-header">
+                    <div class="log-dot red" aria-hidden="true"></div>
+                    <div class="log-dot yellow" aria-hidden="true"></div>
+                    <div class="log-dot green" aria-hidden="true"></div>
+                    <div class="log-title">Console</div>
+                    <button class="log-clear-btn" id="ttClearLogBtn" aria-label="로그 지우기">Clear</button>
+                </div>
+                <div id="ttLog" role="log" aria-live="polite"></div>
+            </section>
+
+            <!-- Timetable Preprocessor -->
+            <section class="preprocess-section" aria-labelledby="tt-preprocess-title">
+                <div class="preprocess-header">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                    <h3 id="tt-preprocess-title">시간표 CSV 변환</h3>
+                </div>
+                <p class="preprocess-desc">
+                    다운로드한 시간표 XLS 파일을 선택하면<br>DB 업로드용 CSV로 변환합니다.
+                </p>
+
+                <input type="file" id="ttFileInput" multiple accept=".xls,.xlsx" aria-label="시간표 파일 선택" style="display:none">
+                <button id="ttSelectFilesBtn" class="btn-accent btn-full">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    파일 선택 (복수 가능)
+                </button>
+
+                <div id="ttSelectedFiles" role="list" aria-label="선택된 시간표 파일"></div>
+
+                <button id="ttPreprocessBtn" class="btn-warning btn-full" style="display:none; margin-top:8px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                    </svg>
+                    CSV 변환 실행
+                </button>
+
+                <div id="ttPreprocessResult" role="alert" aria-live="polite"></div>
+            </section>
+        </div><!-- /data-page="timetable" -->
+
+        <div data-page="attendance" class="page">
+            <div class="page-header">
+                <button class="back-btn" data-target="home">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                    메인 메뉴
+                </button>
+                <h2>과목별 출결 비고 관리</h2>
+            </div>
+
+            <!-- Status Bar -->
+            <div class="status-bar" role="status" aria-live="polite" aria-label="출결 관리 상태">
+                <div class="status-indicator" id="attendStatusIndicator" aria-hidden="true"></div>
+                <div class="status-text">상태: <span id="attendStatus">대기중</span></div>
+            </div>
+
+            <!-- Date Range Settings -->
+            <section class="card" aria-labelledby="attend-range-title">
+                <h2 class="card-title" id="attend-range-title">기간 설정</h2>
+                <div class="input-group">
+                    <label class="input-label" for="attendStartDate">시작일</label>
+                    <input type="date" id="attendStartDate" class="full-width">
+                </div>
+                <div class="input-group">
+                    <label class="input-label" for="attendEndDate">종료일</label>
+                    <input type="date" id="attendEndDate" class="full-width">
+                </div>
+            </section>
+
+            <!-- Options -->
+            <section class="card" aria-labelledby="attend-options-title">
+                <h2 class="card-title" id="attend-options-title">옵션</h2>
+                <label class="checkbox-item" style="width:100%">
+                    <input type="checkbox" id="attendReadOnly">
+                    <span>확인만 (입력하지 않음)</span>
+                </label>
+                <label class="checkbox-item" style="width:100%;margin-top:var(--space-xs)">
+                    <input type="checkbox" id="attendCheckClosed">
+                    <span>마감된 과목도 확인</span>
+                </label>
+            </section>
+
+            <!-- Navigate Button -->
+            <button id="attendNavBtn" class="btn-info btn-full" style="margin-bottom:var(--space-sm)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                </svg>
+                페이지 이동
+            </button>
+
+            <!-- Action Buttons -->
+            <div class="btn-group" role="group" aria-label="출결 관리 제어">
+                <button id="attendStartBtn" class="btn-success">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    시작
+                </button>
+                <button id="attendStopBtn" class="btn-danger" disabled>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    </svg>
+                    중지
+                </button>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container" id="attendProgressContainer" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="출결 관리 진행률">
+                <div class="progress-header">
+                    <span class="progress-label" id="attendProgressLabel">진행 중...</span>
+                    <span class="progress-stats" id="attendProgressStats">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="attendProgressFill" style="width: 0%"></div>
+                </div>
+                <div class="progress-detail" id="attendProgressDetail"></div>
+            </div>
+
+            <!-- Report -->
+            <section id="attendReport" class="card" style="display:none;" aria-labelledby="attend-report-title">
+                <h2 class="card-title" id="attend-report-title">처리 결과</h2>
+                <div id="attendReportContent"></div>
+            </section>
+
+            <!-- Log Terminal -->
+            <section class="log-container" aria-labelledby="attend-log-title">
+                <div class="log-header">
+                    <div class="log-dot red" aria-hidden="true"></div>
+                    <div class="log-dot yellow" aria-hidden="true"></div>
+                    <div class="log-dot green" aria-hidden="true"></div>
+                    <div class="log-title" id="attend-log-title">Console</div>
+                    <button class="log-clear-btn" id="attendClearLogBtn" aria-label="로그 지우기">Clear</button>
+                </div>
+                <div id="attendLog" role="log" aria-live="polite" aria-label="출결 관리 로그"></div>
+            </section>
+        </div><!-- /data-page="attendance" -->
+
+        <!-- Club Activity Page -->
+        <div data-page="club" class="page">
+            <div class="page-header">
+                <button class="back-btn" data-target="home">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                    메인 메뉴
+                </button>
+                <h2>동아리 활동 관리</h2>
+            </div>
+
+            <!-- Status Bar -->
+            <div class="status-bar" role="status" aria-live="polite" aria-label="동아리 활동 상태">
+                <div class="status-indicator" id="clubStatusIndicator" aria-hidden="true"></div>
+                <div class="status-text">상태: <span id="clubStatus">대기중</span></div>
+            </div>
+
+            <!-- Task Tabs -->
+            <div class="club-tabs" role="tablist" aria-label="동아리 작업 선택">
+                <button class="club-tab active" data-club-task="credit_standard" role="tab" aria-selected="true">이수시간기준</button>
+                <button class="club-tab" data-club-task="attendance" role="tab" aria-selected="false">출결관리</button>
+                <button class="club-tab" data-club-task="cumulative" role="tab" aria-selected="false">누가기록</button>
+                <button class="club-tab" data-club-task="cumulative_volunteer" role="tab" aria-selected="false">봉사활동</button>
+                <button class="club-tab" data-club-task="credit_apply" role="tab" aria-selected="false">이수시간반영</button>
+            </div>
+
+            <!-- Config: 이수시간기준등록 -->
+            <div class="club-task-config active" data-club-config="credit_standard" role="tabpanel">
+                <section class="card" aria-labelledby="club-cs-title">
+                    <h2 class="card-title" id="club-cs-title">이수시간기준등록</h2>
+                    <p style="font-size:11px;color:var(--text-secondary);margin:0 0 var(--space-md);">
+                        NEIS 페이지에서 기간을 직접 설정한 뒤 시작하세요.<br>
+                        모든 부서에 대해 전학년 체크박스를 선택 후 저장합니다.
+                    </p>
+                    <div class="club-flow">
+                        <button id="clubCsNavBtn" class="btn-info btn-full">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                            </svg>
+                            페이지 이동
+                        </button>
+                        <div class="club-flow-arrow" aria-hidden="true">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                        </div>
+                        <button id="clubGuideBtn" class="btn-info btn-full" style="background:var(--accent);border-color:var(--accent);">
+                            NEIS 페이지에 가이드 표시
+                        </button>
+                        <div class="club-flow-arrow" aria-hidden="true">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                        </div>
+                        <div class="btn-group" style="margin:0">
+                            <button id="clubCsStartBtn" class="btn-success">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                시작
+                            </button>
+                            <button id="clubCsStopBtn" class="btn-danger" disabled>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                </svg>
+                                중지
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Config: 출결관리 -->
+            <div class="club-task-config" data-club-config="attendance" role="tabpanel">
+                <section class="card" aria-labelledby="club-att-title">
+                    <h2 class="card-title" id="club-att-title">출결 관리 (마감)</h2>
+                    <p style="font-size:11px;color:var(--text-secondary);margin:0 0 var(--space-sm);">
+                        모든 부서의 모든 일자에 대해 출석을 조회하고 마감합니다.
+                    </p>
+                    <div class="input-group">
+                        <label class="input-label" for="clubAttStartDate">시작일</label>
+                        <input type="date" id="clubAttStartDate" class="full-width">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label" for="clubAttEndDate">종료일</label>
+                        <input type="date" id="clubAttEndDate" class="full-width">
+                    </div>
+                </section>
+            </div>
+
+            <!-- Config: 누가기록 -->
+            <div class="club-task-config" data-club-config="cumulative" role="tabpanel">
+                <section class="card" aria-labelledby="club-cum-title">
+                    <h2 class="card-title" id="club-cum-title">누가기록</h2>
+                    <p style="font-size:11px;color:var(--text-secondary);margin:0 0 var(--space-sm);">
+                        모든 부서/일자의 학생에 대해 이수시간과 활동내용을 등록합니다.
+                    </p>
+                    <div class="input-group">
+                        <label class="input-label" for="clubCumStartDate">시작일</label>
+                        <input type="date" id="clubCumStartDate" class="full-width">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label" for="clubCumEndDate">종료일</label>
+                        <input type="date" id="clubCumEndDate" class="full-width">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label" for="clubCumHours">이수시간</label>
+                        <input type="number" id="clubCumHours" value="1" min="1" max="99" class="full-width">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label" for="clubCumContent">활동내용</label>
+                        <input type="text" id="clubCumContent" placeholder="동아리 활동 참여" class="full-width">
+                    </div>
+                </section>
+            </div>
+
+            <!-- Config: 봉사활동 누가기록 -->
+            <div class="club-task-config" data-club-config="cumulative_volunteer" role="tabpanel">
+                <section class="card" aria-labelledby="club-vol-title">
+                    <h2 class="card-title" id="club-vol-title">누가기록 (봉사활동)</h2>
+                    <p style="font-size:11px;color:var(--text-secondary);margin:0 0 var(--space-sm);">
+                        일괄등록으로 봉사활동실적입력 포함하여 저장한 후 해제 후 재저장합니다.
+                    </p>
+                    <div class="input-group">
+                        <label class="input-label" for="clubVolStartDate">시작일</label>
+                        <input type="date" id="clubVolStartDate" class="full-width">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label" for="clubVolEndDate">종료일</label>
+                        <input type="date" id="clubVolEndDate" class="full-width">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label" for="clubVolHours">이수시간</label>
+                        <input type="number" id="clubVolHours" value="1" min="1" max="99" class="full-width">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label" for="clubVolContent">활동내용</label>
+                        <input type="text" id="clubVolContent" placeholder="봉사활동 참여" class="full-width">
+                    </div>
+                </section>
+            </div>
+
+            <!-- Config: 이수시간반영 -->
+            <div class="club-task-config" data-club-config="credit_apply" role="tabpanel">
+                <section class="card" aria-labelledby="club-ca-title">
+                    <h2 class="card-title" id="club-ca-title">이수시간반영</h2>
+                    <p style="font-size:11px;color:var(--text-secondary);margin:0 0 var(--space-sm);">
+                        학생부자료기록에서 직접입력으로 기준일을 설정하고 이수시간을 반영합니다.
+                    </p>
+                    <div class="input-group">
+                        <label class="input-label" for="clubCreditDate">이수시간 기준일</label>
+                        <input type="date" id="clubCreditDate" class="full-width">
+                    </div>
+                </section>
+            </div>
+
+            <!-- Navigate Button -->
+            <button id="clubNavBtn" class="btn-info btn-full" style="margin-bottom:var(--space-sm)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                </svg>
+                페이지 이동
+            </button>
+
+            <!-- Action Buttons -->
+            <div class="btn-group" role="group" aria-label="동아리 활동 제어">
+                <button id="clubStartBtn" class="btn-success">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    시작
+                </button>
+                <button id="clubStopBtn" class="btn-danger" disabled>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    </svg>
+                    중지
+                </button>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container" id="clubProgressContainer" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="동아리 활동 진행률">
+                <div class="progress-header">
+                    <span class="progress-label" id="clubProgressLabel">진행 중...</span>
+                    <span class="progress-stats" id="clubProgressStats">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="clubProgressFill" style="width: 0%"></div>
+                </div>
+                <div class="progress-detail" id="clubProgressDetail"></div>
+            </div>
+
+            <!-- Log Terminal -->
+            <section class="log-container" aria-labelledby="club-log-title">
+                <div class="log-header">
+                    <div class="log-dot red" aria-hidden="true"></div>
+                    <div class="log-dot yellow" aria-hidden="true"></div>
+                    <div class="log-dot green" aria-hidden="true"></div>
+                    <div class="log-title" id="club-log-title">Console</div>
+                    <button class="log-clear-btn" id="clubClearLogBtn" aria-label="로그 지우기">Clear</button>
+                </div>
+                <div id="clubLog" role="log" aria-live="polite" aria-label="동아리 활동 로그"></div>
+            </section>
+        </div><!-- /data-page="club" -->
+    </main>
+
+    <script src="xlsx.full.min.js"></script>
+    <script src="preprocessor.js"></script>
+    <script src="timetable-preprocessor.js"></script>
+    <script src="popup.js"></script>
+</body>
+
+</html>

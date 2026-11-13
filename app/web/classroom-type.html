@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>휴대폰으로 구글 로그인 — 스페이스기전 교실</title>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="classroom-popup.css">
+</head>
+<body data-mode="type">
+<!-- 휴대폰으로 구글 비밀번호 입력 — 칠판에서 비밀번호를 치지 않게(classroom.py Api.type_*, core/classroom_type.py) -->
+<div class="type">
+  <header>
+    <span class="g" aria-hidden="true">G</span>
+    <div><strong>휴대폰으로 구글 로그인</strong><span>비밀번호를 칠판에서 치지 않습니다</span></div>
+    <button id="t-close" class="x" type="button" aria-label="닫기">✕</button>
+  </header>
+  <div class="type-body">
+    <div id="t-qr" class="type-qr" role="img" aria-label="휴대폰 입력 QR"></div>
+    <p id="t-status" class="type-status">QR 을 만드는 중…</p>
+    <ol class="type-steps">
+      <li>수업을 연 선생님 휴대폰 카메라로 QR 을 찍으세요.</li>
+      <li>휴대폰에서 구글 비밀번호를 넣고 <b>교실 기기로 보내기</b>를 누르세요.</li>
+      <li>칠판의 구글 로그인이 저절로 이어집니다. 휴대폰에 구글 확인 알림이 오면 «예».</li>
+    </ol>
+    <p class="type-safe">비밀번호는 휴대폰에서 암호화되어 이 PC 만 풀 수 있습니다. 서버는 볼 수 없고, 이 PC 에도 저장하지 않습니다.</p>
+    <button id="t-retry" class="btn" type="button" hidden>새 QR 만들기</button>
+  </div>
+</div>
+<script src="classroom-type.js"></script>
+</body>
+</html>

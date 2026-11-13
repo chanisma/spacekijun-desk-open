@@ -1,0 +1,19 @@
+/* Locally bundled Pretendard; SIL Open Font License in fonts/OFL.txt. */
+@font-face {
+  font-family: 'Pretendard';
+  src: url('fonts/Pretendard-Regular.woff2') format('woff2');
+  font-weight: 100 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pretendard';
+  src: url('fonts/Pretendard-SemiBold.woff2') format('woff2');
+  font-weight: 501 650;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pretendard';
+  src: url('fonts/Pretendard-Bold.woff2') format('woff2');
+  font-weight: 651 900;
+  font-display: swap;
+}
